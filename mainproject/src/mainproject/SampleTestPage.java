@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import junit.framework.Assert;	
 
@@ -18,8 +17,8 @@ public class SampleTestPage {
 		System.setProperty("webdriver.chrome.driver", "/home/zoho/Downloads/chromedriver");
 		System.setProperty("webdriver.gecko.driver", "/home/zoho/Downloads/geckodriver");
 	
-//		WebDriver driver = new ChromeDriver();
-		WebDriver driver = new FirefoxDriver();
+		WebDriver driver = new ChromeDriver();
+//		WebDriver driver = new FirefoxDriver();
 	
 		driver.manage().window().maximize();
 		Actions action = new Actions(driver);
