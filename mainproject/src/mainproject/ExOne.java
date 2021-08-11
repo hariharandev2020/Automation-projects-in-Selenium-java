@@ -36,10 +36,10 @@ public class ExOne {
 	@Before
 	public void before() {	
 		
-//		System.setProperty("webdriver.chrome.driver", "/home/zoho/Downloads/chromedriver");
-//		driver = new ChromeDriver();
-		System.setProperty("webdriver.gecko.driver",  "/home/zoho/Downloads/geckodriver");
-		WebDriver driver = new FirefoxDriver();
+		System.setProperty("webdriver.chrome.driver", "/home/zoho/Downloads/chromedriver");
+		driver = new ChromeDriver();
+// 		System.setProperty("webdriver.gecko.driver",  "/home/zoho/Downloads/geckodriver");
+// 		WebDriver driver = new FirefoxDriver();
 		driver.manage().window().maximize();
 		String page = "https://demoqa.com/login";
 		driver.get(page);
