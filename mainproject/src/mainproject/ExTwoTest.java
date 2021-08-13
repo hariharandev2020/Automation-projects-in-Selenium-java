@@ -269,7 +269,7 @@ static WebDriver driver;
 //			addressInput.sendKeys("187 Ramalayam ColonyCoutralam 627802 Tenkasi District.");
 //			assertEquals("187 Ramalayam ColonyCoutralam 627802 Tenkasi District.",addressInput.getAttribute("value"));
 //		}
-//									<.....    Submit buttton Test     .....>
+//						<.....    Submit buttton Test     .....>
 		@Test
 		public void  SubmitButtonTest() throws InterruptedException{
 			WebElement submitButton  = this.locatorCSS("#submit");
@@ -279,7 +279,6 @@ static WebDriver driver;
 			Thread.sleep(10000);
 			assertEquals("box-shadow",submitButton.getCssValue("box-shadow"));
 		}
-		
 		@AfterClass
 		public static void QuitTab() {
 			
