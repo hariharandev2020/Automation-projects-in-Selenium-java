@@ -9,15 +9,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.asserts.Assertion;
 
 
 public class ExTwoTest {
-
-static WebDriver driver;
+	
+		static WebDriver driver;
+		JavascriptExecutor js = (JavascriptExecutor) driver; 
 	
 	    public	WebElement locatorCSS(String element) {
 			WebElement tag = null;
@@ -39,7 +42,7 @@ static WebDriver driver;
 		}
 	    public Boolean CheckBox(WebElement element) {
 	        	try {
-	        		return "checkBox" == element.getAttribute("value") ? true : false;
+	        		return "checkBox" == element.getAttribute("type") ? true : false;
 	        	} catch(Exception e) {
 	        	}
 				return false;
@@ -49,17 +52,18 @@ static WebDriver driver;
 			
 			System.setProperty("webdriver.chrome.driver", "/home/zoho/Downloads/chromedriver");
 			driver = new ChromeDriver();
-	//		System.setProperty("webdriver.gecko.driver",  "/home/zoho/Downloads/geckodriver");
-	//		WebDriver driver = new FirefoxDriver();
+//			System.setProperty("webdriver.gecko.driver",  "/home/zoho/Downloads/geckodriver");
+//			WebDriver driver = new FirefoxDriver();
 			driver.manage().window().maximize();
 			String page = "https://demoqa.com/automation-practice-form";
 			driver.get(page);
 			driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
+			
 		}
 	//							<........     Title Test     ......>
 		@Test
 		public void TitleTest() throws InterruptedException { 
-			assertEquals("Student Registration Form",this.locatorCSS("div.row > div.col-12.mt-4.col-md-6 > div.practice-form-wrapper > h5").getText());
+			assertEquals("Student Registration Form",this.locatorCSS(".practice-form-wrapper > h5:nth-child(1)").getText());
 		}
 	//							<........     Input Label Test     ......>
 		@Test
@@ -140,7 +144,6 @@ static WebDriver driver;
 	//								<........  MobileNumLabel Test     ......>
 		@Test
 		public void MobileNumLabelTest() {
-			
 			assertEquals("Mobile(10 Digits)",this.locatorCSS("#userNumber-label").getText());
 		}
 	//								<........  MobileNumInput Test     ......>
@@ -152,8 +155,8 @@ static WebDriver driver;
 			assertEquals("10",mobNumInput.getAttribute("maxlength"));
 			mobNumInput.click();
 			mobNumInput.clear();
-			mobNumInput.sendKeys("7418020933");
-			assertEquals("7418020933", mobNumInput.getAttribute("value"));
+			mobNumInput.sendKeys("9876543210");
+			assertEquals("9876543210", mobNumInput.getAttribute("value"));
 		}
 									//	<........  DobLabelTest     ......>
 		@Test
@@ -172,57 +175,52 @@ static WebDriver driver;
 //			assertEquals("29 Feb 2000",dobInput.getText());
 //			System.out.println(dobInput.getText());
 //		}
-	//									<........  SubjectLabelTest     ......>
+		//		<........  SubjectLabelTest     ......>
 		@Test
 		public void SubjectLabelTest() {
-			
 			assertEquals("Subjects", this.locatorCSS("#subjects-label").getText());
 		}
-	//									<........  SubjectInputTest     ......>
+		//									<........  SubjectInputTest     ......>
 		@Test
 		public void SubjectInputTest() throws InterruptedException {
-			
-			WebElement subInput = this.locatorCSS("#subjectsContainer>div>div>div>div>input");
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+			WebElement subInput  = this.locatorCSS("#subjectsContainer > div > div.subjects-auto-complete__value-container.subjects-auto-complete__value-container--is-multi.css-1hwfws3");
+			WebElement subInput2 = this.locatorCSS("#subjectsContainer > div > div.subjects-auto-complete__value-container.subjects-auto-complete__value-container--is-multi.subjects-auto-complete__value-container--has-value.css-1hwfws3"); 
+			js.executeScript("document.querySelector('#subjectsContainer > div > div.subjects-auto-complete__value-container.subjects-auto-complete__value-container--is-multi.css-1hwfws3').innerHTML = 'Computer Science'");
+			Thread.sleep(1000);
+			subInput.sendKeys(Keys.RETURN);
 			Thread.sleep(500);
-			subInput.click();
-			subInput.sendKeys("I strongly recommend that you must test your functionality only. If an exception is thrown, the test will automatically fail. If no exception is thrown, your tests will all turn up green.");
-			Thread.sleep(500);
-			assertEquals( "I strongly recommend that you must test your functionality only. If an exception is thrown, the test will automatically fail. If no exception is thrown, your tests will all turn up green.",subInput.getAttribute("value"));
-			Thread.sleep(500);
-			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", subInput);
-			
+			assertEquals( "Computer Science",subInput2.getText());
 		}
 	//									<........  HobbiesLabelTest     ......>
 		@Test
 		public void HobbiesLabelTest() {
-			
 			assertEquals("Hobbies", this.locatorCSS("#hobbiesWrapper>div>label").getText());
 		}
 									//	<........  Hobbies Checkbox Test     ......>
-		@Test
-		public void HobbiesCheckBoxTest() throws InterruptedException {
-	
-			WebElement hobbiesCb1 = this.CheckBox(this.locatorCSS("#hobbies-checkbox-1"));
-			WebElement hobbiesCb2 = this.CheckBox(this.locatorCSS("#hobbies-checkbox-2"));
-			WebElement hobbiesCb3 = this.CheckBox(this.locatorCSS("#hobbies-checkbox-3"));
-			assertEquals(hobbiesCb1.getAttribute("type"),checkBox);
-			hobbiesCb1.click();
-			assertTrue(hobbiesCb1.isSelected() && !hobbiesCb2.isSelected() && !hobbiesCb3.isSelected());
-			
-	//								<.....     Hobbies CheckboxTest -1     .....>
-			assertEquals(hobbiesCb2.getAttribute("type"),checkBox);
-			hobbiesCb2.click();
-			assertTrue(!hobbiesCb2.isSelected() && hobbiesCb2.isSelected() && !hobbiesCb3.isSelected());
-	//								<.....     Hobbies CheckboxTest -2     .....>
-			assertEquals(hobbiesCb3.getAttribute("type"),checkBox);
-			hobbiesCb3.click();
-			assertTrue(!hobbiesCb3.isSelected() && !hobbiesCb2.isSelected() && hobbiesCb3.isSelected());
-							//		<.....     Hobbies CheckboxTest -3     .....>
-			assertEquals(hobbiesCb2.getAttribute("type"),checkBox);
-			hobbiesCb1.click();
-			assertTrue(!hobbiesCb2.isSelected() && !hobbiesCb2.isSelected() && hobbiesCb3.isSelected());
-	
-		}
+//		@Test
+//		public void HobbiesCheckBoxTest() throws InterruptedException {
+//			WebElement hobbiesCb1 = this.CheckBox(this.locatorCSS("#hobbies-checkbox-1"));
+//			WebElement hobbiesCb2 = this.CheckBox(this.locatorCSS("#hobbies-checkbox-2"));
+//			WebElement hobbiesCb3 = this.CheckBox(this.locatorCSS("#hobbies-checkbox-3"));
+//			assertEquals(hobbiesCb1.getAttribute("type"),checkBox);
+//			hobbiesCb1.click();
+//			assertTrue(hobbiesCb1.isSelected() && !hobbiesCb2.isSelected() && !hobbiesCb3.isSelected());
+//			
+//	//								<.....     Hobbies CheckboxTest -1     .....>
+//			assertEquals(hobbiesCb2.getAttribute("type"),checkBox);
+//			hobbiesCb2.click();
+//			assertTrue(!hobbiesCb2.isSelected() && hobbiesCb2.isSelected() && !hobbiesCb3.isSelected());
+//	//								<.....     Hobbies CheckboxTest -2     .....>
+//			assertEquals(hobbiesCb3.getAttribute("type"),checkBox);
+//			hobbiesCb3.click();
+//			assertTrue(!hobbiesCb3.isSelected() && !hobbiesCb2.isSelected() && hobbiesCb3.isSelected());
+//							//		<.....     Hobbies CheckboxTest -3     .....>
+//			assertEquals(hobbiesCb2.getAttribute("type"),checkBox);
+//			hobbiesCb1.click();
+//			assertTrue(!hobbiesCb2.isSelected() && !hobbiesCb2.isSelected() && hobbiesCb3.isSelected());
+//	
+//		}
 //									<........  HobbiesLabelTest     ......>
 		@Test
 		public void PictureLabelTest() {
@@ -249,11 +247,10 @@ static WebDriver driver;
 		public void AddressInputTest() throws InterruptedException {
 			Thread.sleep(500);
 			WebElement addressInput  = this.locatorCSS("#currentAddress");
-			Thread.sleep(500);
 			addressInput.click();
 			Thread.sleep(500);
-			addressInput.sendKeys("187 Ramalayam ColonyCoutralam 627802 Tenkasi District.");
-			assertEquals("187 Ramalayam ColonyCoutralam 627802 Tenkasi District.",addressInput.getAttribute("value"));
+			addressInput.sendKeys("187 Ramalayam colony covai.");
+			assertEquals("187 Ramalayam colony covai.",addressInput.getAttribute("value"));
 		}
 //									<........  StateCityDropDownLabel Test     ......>
 		@Test
@@ -261,30 +258,78 @@ static WebDriver driver;
 			assertEquals("State and City", this.locatorCSS("#stateCity-label").getText());
 		}	
 //									<.....     StateCityDropDown Test     .....>
-//		@Test
-//		public void StateCityDropDownTest() throws InterruptedException {
-//
-//			WebElement stateDropDown  = this.locatorCSS("#currentAddress");
-//			addressInput.click();
-//			addressInput.sendKeys("187 Ramalayam ColonyCoutralam 627802 Tenkasi District.");
-//			assertEquals("187 Ramalayam ColonyCoutralam 627802 Tenkasi District.",addressInput.getAttribute("value"));
-//		}
+		@Test
+		public void StateCityDropDownTest() throws InterruptedException {
+		  try {	
+				WebElement stateDropDown  = this.locatorCSS("#state > div > div.css-1hwfws3");
+				driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+				stateDropDown.click();
+				stateDropDown.clear();
+				driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+				js.executeScript("document.querySelector('#state > div > div.css-1hwfws3').innerText = 'Haryana';");
+				System.out.println(stateDropDown.getText());
+				stateDropDown.sendKeys(Keys.RETURN);
+				assertEquals("Haryana",stateDropDown.getText());
+				Thread.sleep(3000);	
+		      }catch(Exception e) {
+		    	  System.out.println(e);
+		      }
+		  }
 //						<.....    Submit buttton Test     .....>
 		@Test
 		public void  SubmitButtonTest() throws InterruptedException{
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 			WebElement submitButton  = this.locatorCSS("#submit");
 			submitButton.click();
-			Thread.sleep(10000);
-			System.out.println(submitButton.getCssValue("box-shadow"));
-			Thread.sleep(10000);
-			assertEquals("box-shadow",submitButton.getCssValue("box-shadow"));
 		}
-		@AfterClass
-		public static void QuitTab() {
-			
-			driver.quit();;
+		@Test
+		public void PopUpWindow() {
+			try {	
+				WebElement preview = this.locatorCSS("body > div.fade.modal.show > div > div");	
+					if(preview.isDisplayed()) {
+							assertEquals("Hari Haran",this.locatorCSS("div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(1) > td:nth-child(2)").getText().toString());
+							assertEquals("hariharan7373@gmail.com",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(2) > td:nth-child(2)").getText());
+							String ExpectedVal = this.locatorCSS("#gender-radio-1").getText();
+							System.out.println(ExpectedVal);
+							String ExpectedVal2 = this.locatorCSS("#gender-radio-2").getText();
+							System.out.println(ExpectedVal2);
+							String ExpectedVal3 = this.locatorCSS("#gender-radio-3").getText();
+							System.out.println(ExpectedVal3);
+							String ActualVal   = this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(3) > td:nth-child(2)").getText();
+								if( ExpectedVal == ActualVal ) {
+									System.out.println("Male is clicked");
+								}else if (ExpectedVal2 == ActualVal) {
+									System.out.println("Female is clicked");
+								}else if(ExpectedVal3 == ActualVal) {
+									System.out.println("Other is clicked");
+								}
+							assertEquals("9876543210",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").getText());
+							assertEquals("16 August,2021",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
+							assertEquals("Computer Science",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(6) > td:nth-child(2)").getText());
+							assertEquals("mh.jpg",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(8) > td:nth-child(2)").getText());
+							assertEquals("187 Ramalayam colony covai.",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)").getText());
+							assertEquals("Haryana Panipat",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)").getText());
+					}else{
+						System.out.println("PopUp window is not displayed");
+					}
+				
+				
+			}catch(Exception e) {
+					System.out.println(e);
+			}
 		}
+		@Test
+		public void CloseButtonTest() throws InterruptedException {
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+			WebElement closeButton = this.locatorCSS("#closeLargeModal");
+			js.executeScript("arguments[0].scrollIntoView(true);",closeButton);
+			closeButton.click();
+		}
+		
+//		@AfterClass
+//		public static void QuitTab() {
+//			
+//			driver.quit();
+//		}
 	
-		
-		
 	}
