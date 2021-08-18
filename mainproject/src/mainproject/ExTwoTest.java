@@ -1,6 +1,9 @@
 package mainproject;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,7 +18,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.testng.asserts.Assertion;
+
 
 
 public class ExTwoTest {
@@ -28,6 +31,24 @@ public class ExTwoTest {
 			WebElement tag = null;
 			try {	
 				tag = driver.findElement(By.cssSelector(element));
+				if(tag.isEnabled()) {
+					System.out.println(tag.getAttribute("id") + " " +  tag.getTagName()  +" " +"is visible");
+					System.out.println(" ");
+				}else {
+					System.out.println(tag.getAttribute("id")+ " " + tag.getTagName()  + " " + " is disabled" );
+					System.out.println(" ");
+					
+				}	
+			}catch(Exception e) {
+				System.out.println(e);
+			}
+		return tag;
+		
+		}
+	    public	WebElement locatorXpath(String element) {
+			WebElement tag = null;
+			try {	
+				tag = driver.findElement(By.xpath(element));
 				if(tag.isEnabled()) {
 					System.out.println(tag.getAttribute("id") + " " +  tag.getTagName()  +" " +"is visible");
 					System.out.println(" ");
@@ -64,9 +85,46 @@ public class ExTwoTest {
 			driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
 			
 		}
+//								<......     Invalid Test Cases     .....>
+		
+//								<......    Empty Test for mandatory Test Cases     .....>
+			
+		
+		@Test
+		public void EmptyCheck() throws InterruptedException {
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+			WebElement submitButton  = this.locatorXpath("//*[@id='submit']");
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			Thread.sleep(2000);
+			WebElement inputFn		 = driver.findElement(By.cssSelector("#firstName:invalid"));
+			WebElement inputLn		 = driver.findElement(By.cssSelector("#lastName:invalid"));
+			WebElement inputMob		 = driver.findElement(By.cssSelector("#userNumber:invalid"));
+			Thread.sleep(2000);
+			WebElement r2			 = driver.findElement(By.cssSelector("#hobbies-checkbox-2:invalid"));
+			WebElement r1			 = driver.findElement(By.cssSelector("#hobbies-checkbox-1:invalid"));
+			WebElement r3			 = driver.findElement(By.cssSelector("#hobbies-checkbox-3:invalid"));
+			
+			js.executeScript("arguments[0].scrollIntoView(true);",inputFn);
+			Thread.sleep(2000);
+			System.out.println(inputFn.getTagName());
+			assertTrue(inputFn.isDisplayed());
+			assertTrue(inputLn.isDisplayed());
+			assertTrue(r1.isDisplayed());
+			assertTrue(r2.isDisplayed());
+			assertTrue(r3.isDisplayed());
+			assertTrue(inputMob.isDisplayed());
+			
+			Thread.sleep(2000);
+	 }	
+		//						<........     Valid Test Cases    ......>
+		
+		
 	//							<........     Title Test     ......>
 		@Test
 		public void TitleTest() throws InterruptedException { 
+			WebElement header = driver.findElement(By.cssSelector(".practice-form-wrapper > h5:nth-child(1)"));
+			js.executeScript("arguments[0].scrollIntoView(true);",header);
 			assertEquals("Student Registration Form",this.locatorCSS(".practice-form-wrapper > h5:nth-child(1)").getText());
 		}
 	//							<........     Input Label Test     ......>
@@ -205,45 +263,53 @@ public class ExTwoTest {
 									//	<........  Hobbies Checkbox Test     ......>
 		@Test
 		public void HobbiesCheckBoxTest() throws InterruptedException {
+		  try {	
 			Boolean hobbiesCb1 = this.CheckBox("#hobbies-checkbox-1");
 			Boolean hobbiesCb2 = this.CheckBox("#hobbies-checkbox-2");
 			Boolean hobbiesCb3 = this.CheckBox("#hobbies-checkbox-3");
 			Thread.sleep(1000);
-//			assertTrue(hobbiesCb1);
-//			assertTrue(hobbiesCb2);
-//			assertTrue(hobbiesCb3);
-//			Thread.sleep(3000);
-		}
-		@Test 
-		public void CheckBoxChecked() throws InterruptedException {
-		  try {	
-			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			WebElement Cbox  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(1) > label"));
-			WebElement CboxOne  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(2) > label"));
-			WebElement CboxTwo  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(3) > label"));
-			js.executeScript("arguments[0].scrollIntoView(true);",Cbox);
-			Cbox.click();
-			assertTrue(Cbox.isSelected());
-			CboxOne.click();
-			assertTrue(CboxOne.isSelected());
-			CboxTwo.click();
-			assertTrue(CboxTwo.isSelected());
-			Cbox.click();
-			CboxOne.click();
-			assertTrue(Cbox.isSelected() && CboxOne.isSelected());
-			Cbox.click();
-			CboxTwo.click();
-			assertTrue(Cbox.isSelected() && CboxTwo.isSelected());
-			CboxOne.click();
-			CboxTwo .click();
-			assertTrue( CboxOne.isSelected() && CboxTwo.isSelected());
-			Cbox.click();
-			CboxOne.click();
-			CboxTwo.click();
-			assertTrue(Cbox.isSelected() && CboxOne.isSelected() && CboxTwo.isSelected());
+			assertTrue(hobbiesCb1);
+			assertTrue(hobbiesCb2);
+			assertTrue(hobbiesCb3);
+			Thread.sleep(3000);
 		  }catch(AssertionError e) {
 			  System.out.println(e);
 		  }
+		  }
+		@Test 
+		public void CheckBoxChecked() throws InterruptedException {	
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			WebElement Cbox  = driver.findElement(By.cssSelector("#hobbies-checkbox-1"));
+			WebElement CboxL  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(1) > label"));
+			WebElement CboxOne  = driver.findElement(By.cssSelector("#hobbies-checkbox-2"));
+			WebElement CboxOneL  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(2) > label"));
+			WebElement CboxTwo  = driver.findElement(By.cssSelector("#hobbies-checkbox-3"));
+			WebElement CboxTwoL  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(3) > label"));
+			js.executeScript("arguments[0].scrollIntoView(true);",Cbox);
+			CboxL.click();
+			assertTrue(Cbox.isSelected());
+			Thread.sleep(1000);
+			CboxOneL.click();
+			assertTrue(CboxOne.isSelected() && CboxOne.isSelected());
+			CboxTwoL.click();
+			assertTrue(CboxTwo.isSelected() && CboxOne.isSelected() && CboxTwo.isSelected());
+			Thread.sleep(1000);
+			CboxL.click();
+			CboxOneL.click();
+			assertTrue(!Cbox.isSelected() && !CboxOne.isSelected() && CboxTwo.isSelected());
+			Thread.sleep(1000);
+			CboxL.click();
+			CboxTwoL.click();
+			assertTrue(Cbox.isSelected() && !CboxOne.isSelected() && !CboxTwo.isSelected());
+			Thread.sleep(1000);
+			CboxOneL.click();
+			CboxTwoL.click();
+			assertTrue(Cbox.isSelected() && CboxOne.isSelected() && CboxTwo.isSelected());
+			Thread.sleep(1000);
+			CboxL.click();
+			CboxOneL.click();
+			CboxTwoL.click();
+			Thread.sleep(1000);
 		}
 		//							<........  PictureInput LabelTest     ......>
 		@Test
@@ -286,27 +352,29 @@ public class ExTwoTest {
 			assertEquals("State and City", this.locatorCSS("#stateCity-label").getText());
 		}	
 //									<.....     StateCityDropDown Test     .....>
-//		@Test
-//		public void StateCityDropDownTest() throws InterruptedException {
-//				WebElement stateDropDown  = this.locatorCSS("#react-select-3-input");
-//				Thread.sleep(1000);
-//				stateDropDown.click();
-//				stateDropDown.sendKeys("Har");
-//				Thread.sleep(2000);
-//				stateDropDown.sendKeys(Keys.RETURN);
-//				Thread.sleep(1000);
-//				WebElement cityDropDown   = this.locatorCSS("#state > div:nth-child(1) > div:nth-child(1)");
-//				Thread.sleep(2000);
-//				cityDropDown.click();
-//				cityDropDown.sendKeys("Pa");
-//				Thread.sleep(2000);
-//				cityDropDown.sendKeys(Keys.RETURN);
-//				
-//				WebElement state = this.locatorCSS("#state > div > div > div");
-//				WebElement city  = this.locatorCSS("#city > div > div > div");
-//				assertEquals("Haryana",state.getText());
-//				assertEquals("Panipat",state.getText());
-//		  }
+		@Test
+		public void StateCityDropDownTest() throws InterruptedException {
+				WebElement stateDropDown  = this.locatorCSS("#state > div");
+				WebElement stateInput  	  = this.locatorCSS("#react-select-3-input");
+				WebElement cityDropDown   = this.locatorCSS("#city > div");
+				WebElement cityInput  	  = this.locatorCSS("#react-select-4-input");
+				js.executeScript("arguments[0].scrollIntoView(true);",stateInput);
+				Thread.sleep(1000);
+				stateDropDown.click();
+				stateInput.sendKeys("Har");
+				Thread.sleep(100);
+				stateInput.sendKeys(Keys.RETURN);
+				Thread.sleep(2000);
+				cityDropDown.click();
+				Thread.sleep(2000);
+				cityInput.sendKeys("Pani");
+				Thread.sleep(2000);
+				cityInput.sendKeys(Keys.RETURN);
+				Thread.sleep(1000);
+				assertEquals(stateDropDown.getText(),"Haryana");
+				assertEquals(cityDropDown.getText(),"Panipat");
+				Thread.sleep(3000);
+		  }
 //									<.....    Submit buttton Test     .....>
 		@Test
 		public void  SubmitButtonTest() throws InterruptedException{
@@ -338,11 +406,11 @@ public class ExTwoTest {
 									System.out.println("Other is clicked");
 								}
 							assertEquals("9876543210",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").getText());
-							assertEquals("17 August,2021",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
+							assertEquals("18 August,2021",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
 							assertEquals("Computer Science",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(6) > td:nth-child(2)").getText());
 							assertEquals("mh.jpg",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(8) > td:nth-child(2)").getText());
 							assertEquals("187 Ramalayam colony covai.",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)").getText());
-//							assertEquals("Haryana Panipat",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)").getText());
+							assertEquals("Haryana Panipat",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)").getText());
 							
 					}else{
 						System.out.println("PopUp window is not displayed");
