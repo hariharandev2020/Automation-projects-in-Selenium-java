@@ -3,7 +3,9 @@ package mainproject;
 import org.junit.Assert;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,12 +15,15 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 
 public class ExTwoTest {
@@ -71,25 +76,78 @@ public class ExTwoTest {
         	}
 			return false;
 	    }
+//	    						<.....	     MinValTes     .....>
 	    
+	    public WebElement MinValTest(String element) throws InterruptedException {
+	    	WebElement input = null;
+	    	input = driver.findElement(By.cssSelector(element));
+	    	input.click();
+	    	input.clear();
+	    	input.sendKeys("a");
+	    	return input;
+	    }
+//	    						<.....	    MaxValTest     .....>
+	    
+	    public WebElement MaxValTest(String element) throws InterruptedException {
+	    	WebElement input = null;
+	    	input = driver.findElement(By.cssSelector(element));
+	    	input.click();
+	    	input.clear();
+	    	input.sendKeys("abcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcba");
+	    	return input;
+	    }
+//	    						<.....	    MaxNumTest     .....>
+	    
+	    public WebElement MaxNumTest(String element) throws InterruptedException {
+	    	WebElement input = null;
+	    	input = driver.findElement(By.cssSelector(element));
+	    	input.click();
+	    	input.clear();
+	    	input.sendKeys("98763423451");
+	    	return input;
+	    }
+	    
+//	    						<.....	    SplCharTest     .....>
+	    public WebElement SplCharTest(String element) throws InterruptedException {
+	    	WebElement input = null;
+	    	input = driver.findElement(By.cssSelector(element));
+	    	input.click();
+	    	input.clear();
+	    	input.sendKeys("/?~!@#$%^&*()+");
+	    	return input;
+	    }
+//	    					<.....	    SplCharTestTwo     .....>
+	    
+	    public WebElement SplCharTestTwo(String element) throws InterruptedException {
+	    	WebElement input = null;
+	    	input = driver.findElement(By.cssSelector(element));
+	    	input.click();
+	    	input.clear();
+	    	input.sendKeys("``````````");
+	    	return input;
+	    }
+//	    					<.....     Getting border-color     .....>
+	    
+	    public WebElement BorderColor(String element) {
+	    	WebElement elem = null;
+	    	String expected = "rgb(220, 53, 69)";
+	    	assertTrue(expected == elem.findElement(By.xpath(element)).getCssValue("border-color"));
+	    	System.out.println(elem);
+	    	return elem;
+	    }
 		@BeforeClass
 		public static void before() {	
-			
 			System.setProperty("webdriver.chrome.driver", "/home/zoho/Downloads/chromedriver");
 			driver = new ChromeDriver();
 //			System.setProperty("webdriver.gecko.driver",  "/home/zoho/Downloads/geckodriver");
-//			WebDriver driver = new FirefoxDriver();
+//			driver = new FirefoxDriver();
 			driver.manage().window().maximize();
 			String page = "https://demoqa.com/automation-practice-form";
 			driver.get(page);
-			driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
-			
 		}
 //								<......     Invalid Test Cases     .....>
-		
+	
 //								<......    Empty Test for mandatory Test Cases     .....>
-			
-		
 		@Test
 		public void EmptyCheck() throws InterruptedException {
 			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
@@ -100,27 +158,95 @@ public class ExTwoTest {
 			WebElement inputFn		 = driver.findElement(By.cssSelector("#firstName:invalid"));
 			WebElement inputLn		 = driver.findElement(By.cssSelector("#lastName:invalid"));
 			WebElement inputMob		 = driver.findElement(By.cssSelector("#userNumber:invalid"));
-			Thread.sleep(2000);
-			WebElement r2			 = driver.findElement(By.cssSelector("#hobbies-checkbox-2:invalid"));
-			WebElement r1			 = driver.findElement(By.cssSelector("#hobbies-checkbox-1:invalid"));
-			WebElement r3			 = driver.findElement(By.cssSelector("#hobbies-checkbox-3:invalid"));
-			
+			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+			WebElement radioMen		 = driver.findElement(By.cssSelector("#gender-radio-1:invalid"));
+			WebElement radioWmen	 = driver.findElement(By.cssSelector("#gender-radio-2:invalid"));
+			WebElement radioOther	 = driver.findElement(By.cssSelector("#gender-radio-3:invalid"));
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			js.executeScript("arguments[0].scrollIntoView(true);",inputFn);
 			Thread.sleep(2000);
-			System.out.println(inputFn.getTagName());
-			assertTrue(inputFn.isDisplayed());
-			assertTrue(inputLn.isDisplayed());
-			assertTrue(r1.isDisplayed());
-			assertTrue(r2.isDisplayed());
-			assertTrue(r3.isDisplayed());
-			assertTrue(inputMob.isDisplayed());
-			
-			Thread.sleep(2000);
+			assertTrue(inputFn.isSelected() == false);
+			assertTrue(inputLn.isSelected() == false);
+			assertTrue(radioMen.isSelected() == false);
+			assertTrue(radioWmen.isSelected() == false);
+			assertTrue(radioOther.isSelected() == false );
+			assertTrue(inputMob.isSelected() == false);	  
 	 }	
-		//						<........     Valid Test Cases    ......>
+	//							<.......     *********     ..........>		
 		
+	//							<........     InValid Test Cases    ......>
+		@Test
+		public void MinSizeTest() throws InterruptedException {		
+			WebElement radioOne 	 = this.locatorCSS("#gender-radio-1");
+			WebElement radioTwo 	 = this.locatorCSS("#gender-radio-2");
+			WebElement radioThree 	 = this.locatorCSS("#gender-radio-3");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			Thread.sleep(1000);
+			WebElement Fname         = this.MinValTest("#firstName");
+			WebElement Lname         = this.MinValTest("#lastName");
+			WebElement MobNum        = this.MinValTest("#userNumber");
+			Thread.sleep(4000);
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("window.scrollBy(0,-400)", "");
+			Thread.sleep(1000);	
+			if(driver.findElement(By.cssSelector("body > div.fade.modal.show > div > div")).isDisplayed()) {
+				fail("Test case should be fail");
+			}else {
+				System.out.println("Error handling succeed");
+				assertTrue(true);
+			}	
+		}		
+		//					.....     MaxSize Test     .....
+		@Test
+		public void MaxSizeTest() throws InterruptedException {		
+			WebElement radioOne 	 = this.locatorCSS("#gender-radio-1");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			Thread.sleep(1000);
+			WebElement Fname         = this.MaxValTest("#firstName");
+			WebElement Lname         = this.MaxValTest("#lastName");
+			WebElement MobNum        = this.MaxNumTest("#userNumber");
+			Thread.sleep(4000);
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("window.scrollBy(0,-400)", ""); 
+//			if(driver.findElement(By.cssSelector("body > div.fade.modal.show > div > div")).isDisplayed()) {
+//			fail("Test case should be fail");
+//		}else {
+//			System.out.println("Error handling succeed");
+//			assertTrue(true);
+//		}
+			String border = this.locatorXpath("//*[@id=\"firstName\"]").getCssValue("border-color");
+			System.out.println(border);
+		}
+				
+							//		.....     MaxSize Test     .....
+		@Test
+		public void SplCharacterTest() throws InterruptedException {		
+				WebElement radioOne 	 = this.locatorCSS("#genterWrapper > div.col-md-9.col-sm-12 > div:nth-child(1) > label");
+				WebElement submitButton  = this.locatorCSS("#submit");
+				Thread.sleep(1000);
+				WebElement Fname         = this.SplCharTest("#firstName");
+				WebElement Lname         = this.SplCharTest("#lastName");
+				radioOne.click();
+				WebElement MobNum        = this.SplCharTest("#userNumber");
+				Thread.sleep(2000);
+				js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+				submitButton.click();
+				js.executeScript("window.scrollBy(0,-400)", "");
+				Thread.sleep(1000);
+				WebElement popUp = driver.findElement(By.cssSelector("body > div.fade.modal.show > div > div"));
+					if(popUp.isDisplayed()) {
+						fail("Test case should be fail");
+					}else {
+						System.out.println("Error handling succeed");
+						assertTrue(true);
+					}
+			}
 		
-	//							<........     Title Test     ......>
+	//							<........     Valid Test Cases    ......>
+		
+	//							<......     Title Test     ......>
 		@Test
 		public void TitleTest() throws InterruptedException { 
 			WebElement header = driver.findElement(By.cssSelector(".practice-form-wrapper > h5:nth-child(1)"));
@@ -192,16 +318,16 @@ public class ExTwoTest {
 			String radio = "radio";
 			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);			
 					assertEquals(radioOne.getAttribute("type"),radio);
-			r1.click();
-					assertTrue(radioOne.isSelected() && !radioTwo.isSelected() && !radioThree.isSelected());
+			r3.click();
+					assertTrue(!radioOne.isSelected() && !radioTwo.isSelected() && radioThree.isSelected());
 						//		<.....     Test case -2     .....>
 					assertEquals(radioTwo.getAttribute("type"),radio);
 			r2.click();
 					assertTrue(!radioOne.isSelected() && radioTwo.isSelected() && !radioThree.isSelected());
 					//			<.....     Test case -3     .....>
 					assertEquals(radioThree.getAttribute("type"),radio);
-			r3.click();
-					assertTrue(!radioOne.isSelected() && !radioTwo.isSelected() && radioThree.isSelected());			
+			r1.click();
+					assertTrue(radioOne.isSelected() && !radioTwo.isSelected() && !radioThree.isSelected());			
 		}	
 	//								<........  MobileNumLabel Test     ......>
 		@Test
@@ -227,22 +353,26 @@ public class ExTwoTest {
 			assertEquals("Date of Birth", this.locatorCSS("#dateOfBirth-label").getText());
 		}
 	//									<........  DobInputTest     ......>
-//		@Test
-//		public void DobInputTest() {
-//			
-//			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
-//			dobInput.click();
-//			dobInput.clear();
-//			dobInput.sendKeys("29 Feb 2000");
-//			assertEquals("29 Feb 2000",dobInput.getText());
-//			System.out.println(dobInput.getText());
-//		}
-		//		<........  SubjectLabelTest     ......>
+		@Test
+		public void DobInputTest() {			
+			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
+			dobInput.click();
+			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+			Select MonthSelect = new Select(driver.findElement(By.cssSelector("#dateOfBirth > div.react-datepicker__tab-loop > div.react-datepicker-popper > div > div > div.react-datepicker__month-container > div.react-datepicker__header > div.react-datepicker__header__dropdown.react-datepicker__header__dropdown--select > div.react-datepicker__month-dropdown-container.react-datepicker__month-dropdown-container--select > select")));
+			MonthSelect.selectByValue("1");
+			Select YearSelect  = new Select(driver.findElement(By.cssSelector("#dateOfBirth > div.react-datepicker__tab-loop > div.react-datepicker-popper > div > div > div.react-datepicker__month-container > div.react-datepicker__header > div.react-datepicker__header__dropdown.react-datepicker__header__dropdown--select > div.react-datepicker__year-dropdown-container.react-datepicker__year-dropdown-container--select > select")));
+			YearSelect.selectByValue("2000");
+			WebElement Date  = driver.findElement(By.cssSelector("#dateOfBirth > div.react-datepicker__tab-loop > div.react-datepicker-popper > div > div > div.react-datepicker__month-container > div.react-datepicker__month > div:nth-child(5) > div.react-datepicker__day.react-datepicker__day--029"));
+			Date.click();
+			assertEquals("29 Feb 2000",dobInput.getAttribute("value"));
+			System.out.println(dobInput.getText());
+		}
+		//								<........  SubjectLabelTest     ......>
 		@Test
 		public void SubjectLabelTest() {
 			assertEquals("Subjects", this.locatorCSS("#subjects-label").getText());
 		}
-		//									<........  SubjectInputTest     ......>
+		//								<........  SubjectInputTest     ......>
 		@Test
 		public void SubjectInputTest() throws InterruptedException {
 			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
@@ -263,18 +393,10 @@ public class ExTwoTest {
 									//	<........  Hobbies Checkbox Test     ......>
 		@Test
 		public void HobbiesCheckBoxTest() throws InterruptedException {
-		  try {	
 			Boolean hobbiesCb1 = this.CheckBox("#hobbies-checkbox-1");
 			Boolean hobbiesCb2 = this.CheckBox("#hobbies-checkbox-2");
 			Boolean hobbiesCb3 = this.CheckBox("#hobbies-checkbox-3");
 			Thread.sleep(1000);
-			assertTrue(hobbiesCb1);
-			assertTrue(hobbiesCb2);
-			assertTrue(hobbiesCb3);
-			Thread.sleep(3000);
-		  }catch(AssertionError e) {
-			  System.out.println(e);
-		  }
 		  }
 		@Test 
 		public void CheckBoxChecked() throws InterruptedException {	
@@ -305,12 +427,9 @@ public class ExTwoTest {
 			CboxOneL.click();
 			CboxTwoL.click();
 			assertTrue(Cbox.isSelected() && CboxOne.isSelected() && CboxTwo.isSelected());
-			Thread.sleep(1000);
-			CboxL.click();
 			CboxOneL.click();
-			CboxTwoL.click();
-			Thread.sleep(1000);
-		}
+			Thread.sleep(4000);
+	}
 		//							<........  PictureInput LabelTest     ......>
 		@Test
 		public void PictureLabelTest() {
@@ -319,15 +438,15 @@ public class ExTwoTest {
 			
 		}
 //									<........  PictureInput Test     ......>
-		@Test
-		public void PictureInputTest() {
-
-			WebElement picInput  = this.locatorCSS("#uploadPicture");
-			picInput.sendKeys("/home/zoho/Pictures/mh.jpg");
-			assertEquals("\\fakepath\\mh.jpg",picInput.getAttribute("value"));	
-			js.executeScript("arguments[0].scrollIntoView(true);",picInput);
-//			System.out.println(picInput.getAttribute("value"));
-		}
+//		@Test
+//		public void PictureInputTest() {
+//
+//			WebElement picInput  = this.locatorCSS("#uploadPicture");
+//			picInput.sendKeys("/home/zoho/Pictures/mh.jpg");
+//			assertEquals("\\fakepath\\mh.jpg",picInput.getAttribute("value"));	
+//			js.executeScript("arguments[0].scrollIntoView(true);",picInput);
+////			System.out.println(picInput.getAttribute("value"));
+//		}
 //									<........  HobbiesLabelTest     ......>
 		@Test
 		public void AddressLabelTest() {
@@ -406,8 +525,9 @@ public class ExTwoTest {
 									System.out.println("Other is clicked");
 								}
 							assertEquals("9876543210",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").getText());
-							assertEquals("18 August,2021",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
+							assertEquals("29 February,2000",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
 							assertEquals("Computer Science",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(6) > td:nth-child(2)").getText());
+							assertEquals("Sports, Music",this.locatorCSS(".fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(7) > td:nth-child(2)").getText());
 							assertEquals("mh.jpg",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(8) > td:nth-child(2)").getText());
 							assertEquals("187 Ramalayam colony covai.",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)").getText());
 							assertEquals("Haryana Panipat",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)").getText());
@@ -425,14 +545,15 @@ public class ExTwoTest {
 		public void CloseButtonTest() throws InterruptedException {
 			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 			WebElement closeButton = this.locatorCSS("#closeLargeModal");
-			js.executeScript("arguments[0].scrollIntoView(true);",closeButton);
+			js.executeScript("window.scrollBy(0,400)", "");
+			Thread.sleep(2000);
 			closeButton.click();
 		}
 		
-	@AfterClass
-		public static void QuitTab() {
-			
-			driver.quit();
-		}
+//	@AfterClass
+//		public static void QuitTab() {
+//			
+//			driver.quit();
+//		}
 	
-	}
+  }	  
