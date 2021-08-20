@@ -427,14 +427,14 @@ public class ExTwoTest {
 			WebElement submitButton  = this.locatorCSS("#submit");
 			String ExpectedColor = "rgb(220, 53, 69)";
 			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
-			submitButton.click();
 			js.executeScript("arguments[0].scrollIntoView(true);",MobNum);
 			assertEquals("Special character only error for the Mobile input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
 			Thread.sleep(1000);
 		}
 		@Test
 		public void MobNumSplCharTestTwo() throws InterruptedException {
-			WebElement MobNum1         = driver.findElement(By.cssSelector("userNumber"));
+			WebElement MobNum1         = driver.findElement(By.cssSelector("#userNumber"));
+			Thread.sleep(500);
 			MobNum1.click();
 			MobNum1.clear();
 			MobNum1.sendKeys("@#$%^&*?!~");
@@ -446,7 +446,7 @@ public class ExTwoTest {
 		@Test
 		public void MobNumCharTest() throws InterruptedException {
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement MobNum2         = driver.findElement(By.cssSelector("userNumber"));
+			WebElement MobNum2         = driver.findElement(By.cssSelector("#userNumber"));
 			Thread.sleep(500);
 			MobNum2.click();
 			MobNum2.clear();
@@ -460,7 +460,7 @@ public class ExTwoTest {
 		@Test
 		public void MobileNumInputTest() {
 			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-			WebElement mobNumInput = driver.findElement(By.cssSelector("userNumber"));
+			WebElement mobNumInput = driver.findElement(By.cssSelector("#userNumber"));
 			assertEquals("10",mobNumInput.getAttribute("minlength").toString());
 			assertEquals("10",mobNumInput.getAttribute("maxlength").toString());
 			mobNumInput.click();
@@ -479,16 +479,17 @@ public class ExTwoTest {
 			driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
 			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
 			String ExpectedColor = "rgb(220, 53, 69)";
-			Thread.sleep(1000);
+			Thread.sleep(500);
 			dobInput.click();
 			dobInput.sendKeys("ab");
 			dobInput.sendKeys(Keys.RETURN);
 			assertEquals("Proper format DOB input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
 		}
 		@Test
-		public void DobInputInvalidNumTest() {
+		public void DobInputInvalidNumTest() throws InterruptedException {
 			driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
 			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
+			Thread.sleep(500);
 			String ExpectedColor = "rgb(220, 53, 69)";
 			dobInput.click();
 			dobInput.sendKeys("00");
@@ -497,9 +498,10 @@ public class ExTwoTest {
 		}
 	//									<........  DobInputTest     ......>
 		@Test
-		public void DobInputTest() {
+		public void DobInputTest() throws InterruptedException {
 			driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
 			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
+			Thread.sleep(1000);
 			dobInput.click();
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 			Select MonthSelect = new Select(driver.findElement(By.cssSelector("#dateOfBirth > div.react-datepicker__tab-loop > div.react-datepicker-popper > div > div > div.react-datepicker__month-container > div.react-datepicker__header > div.react-datepicker__header__dropdown.react-datepicker__header__dropdown--select > div.react-datepicker__month-dropdown-container.react-datepicker__month-dropdown-container--select > select")));
@@ -580,15 +582,15 @@ public class ExTwoTest {
 			
 		}
 //									<........  PictureInput Test     ......>
-//		@Test
-//		public void PictureInputTest() {
-//
-//			WebElement picInput  = this.locatorCSS("#uploadPicture");
-//			picInput.sendKeys("/home/zoho/Pictures/mh.jpg");
-//			assertEquals("\\fakepath\\mh.jpg",picInput.getAttribute("value"));	
-//			js.executeScript("arguments[0].scrollIntoView(true);",picInput);
-////			System.out.println(picInput.getAttribute("value"));
-//		}
+		@Test
+		public void PictureInputTest() {
+
+			WebElement picInput  = this.locatorCSS("#uploadPicture");
+			picInput.sendKeys("/home/zoho/Pictures/mh.jpg");
+			assertEquals("\\fakepath\\mh.jpg",picInput.getAttribute("value"));	
+			js.executeScript("arguments[0].scrollIntoView(true);",picInput);
+			System.out.println(picInput.getAttribute("value"));
+		}
 //									<........  HobbiesLabelTest     ......>
 		@Test
 		public void AddressLabelTest() {
@@ -620,21 +622,22 @@ public class ExTwoTest {
 				WebElement cityDropDown   = this.locatorCSS("#city > div");
 				WebElement cityInput  	  = this.locatorCSS("#react-select-4-input");
 				js.executeScript("arguments[0].scrollIntoView(true);",stateInput);
-				Thread.sleep(1000);
+				Thread.sleep(500);
 				stateDropDown.click();
+				Thread.sleep(500);
 				stateInput.sendKeys("Har");
 				Thread.sleep(100);
 				stateInput.sendKeys(Keys.RETURN);
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				cityDropDown.click();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				cityInput.sendKeys("Pani");
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				cityInput.sendKeys(Keys.RETURN);
 				Thread.sleep(1000);
 				assertEquals(stateDropDown.getText(),"Haryana");
 				assertEquals(cityDropDown.getText(),"Panipat");
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 		  }
 //									<.....    Submit buttton Test     .....>
 		@Test
@@ -647,6 +650,7 @@ public class ExTwoTest {
 		}
 		@Test
 		public void PopUpWindow() {	
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 				WebElement preview = this.locatorCSS("body > div.fade.modal.show > div > div");	
 					if(preview.isDisplayed()) {
 							assertEquals("Hari Haran",this.locatorCSS("div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(1) > td:nth-child(2)").getText().toString());
@@ -669,19 +673,18 @@ public class ExTwoTest {
 							assertEquals("29 February,2000",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
 							assertEquals("Computer Science",this.locatorCSS(".table-responsive>table>tbody>tr:nth-child(6)>td:last-of-type").getText());
 							assertEquals("Sports, Music",this.locatorCSS(".fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(7) > td:nth-child(2)").getText());
-							assertEquals("mh.jpg",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(8) > td:nth-child(2)").getText());
+							assertEquals("mh.jpg",this.locatorCSS("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(8) > td:nth-child(2)").getText());
 							assertEquals("187 Ramalayam colony covai.",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)").getText());
-							assertEquals("Haryana Panipat",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)").getText());
-							
+							assertEquals("Haryana Panipat",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)").getText());	
 					}else{
 						System.out.println("PopUp window is not displayed");
 					}
 		}
 		@Test
 		public void CloseButtonTest() throws InterruptedException {
-			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WebElement closeButton = this.locatorCSS("#closeLargeModal");
-			js.executeScript("window.scrollBy(0,400)", "");
+			js.executeScript("arguments[0].scrollIntoView(true);",closeButton);
 			Thread.sleep(2000);
 			closeButton.click();
 		}
