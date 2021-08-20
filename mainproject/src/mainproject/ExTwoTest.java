@@ -31,7 +31,7 @@ public class ExTwoTest {
 		static WebDriver driver;
 		JavascriptExecutor js = (JavascriptExecutor) driver; 
 		Actions act = new Actions(driver);
-	
+		
 	    public	WebElement locatorCSS(String element) {
 			WebElement tag = null;
 			try {	
@@ -41,14 +41,12 @@ public class ExTwoTest {
 					System.out.println(" ");
 				}else {
 					System.out.println(tag.getAttribute("id")+ " " + tag.getTagName()  + " " + " is disabled" );
-					System.out.println(" ");
-					
+					System.out.println(" ");			
 				}	
 			}catch(Exception e) {
 				System.out.println(e);
 			}
 		return tag;
-		
 		}
 	    public	WebElement locatorXpath(String element) {
 			WebElement tag = null;
@@ -60,7 +58,6 @@ public class ExTwoTest {
 				}else {
 					System.out.println(tag.getAttribute("id")+ " " + tag.getTagName()  + " " + " is disabled" );
 					System.out.println(" ");
-					
 				}	
 			}catch(Exception e) {
 				System.out.println(e);
@@ -68,7 +65,6 @@ public class ExTwoTest {
 		return tag;
 		
 		}
-	    
 	    public Boolean CheckBox(String locator) {
         	try {
         		return "checkBox" == this.locatorCSS(locator).getAttribute("type") ? true : false;
@@ -77,17 +73,15 @@ public class ExTwoTest {
 			return false;
 	    }
 //	    						<.....	     MinValTes     .....>
-	    
 	    public WebElement MinValTest(String element) throws InterruptedException {
 	    	WebElement input = null;
 	    	input = driver.findElement(By.cssSelector(element));
 	    	input.click();
 	    	input.clear();
-	    	input.sendKeys("a");
+	    	input.sendKeys("aaa");
 	    	return input;
 	    }
 //	    						<.....	    MaxValTest     .....>
-	    
 	    public WebElement MaxValTest(String element) throws InterruptedException {
 	    	WebElement input = null;
 	    	input = driver.findElement(By.cssSelector(element));
@@ -97,7 +91,6 @@ public class ExTwoTest {
 	    	return input;
 	    }
 //	    						<.....	    MaxNumTest     .....>
-	    
 	    public WebElement MaxNumTest(String element) throws InterruptedException {
 	    	WebElement input = null;
 	    	input = driver.findElement(By.cssSelector(element));
@@ -105,8 +98,7 @@ public class ExTwoTest {
 	    	input.clear();
 	    	input.sendKeys("98763423451");
 	    	return input;
-	    }
-	    
+	    } 
 //	    						<.....	    SplCharTest     .....>
 	    public WebElement SplCharTest(String element) throws InterruptedException {
 	    	WebElement input = null;
@@ -116,8 +108,7 @@ public class ExTwoTest {
 	    	input.sendKeys("/?~!@#$%^&*()+");
 	    	return input;
 	    }
-//	    					<.....	    SplCharTestTwo     .....>
-	    
+//	    					<.....	    SplCharTestTwo     .....>  
 	    public WebElement SplCharTestTwo(String element) throws InterruptedException {
 	    	WebElement input = null;
 	    	input = driver.findElement(By.cssSelector(element));
@@ -127,13 +118,11 @@ public class ExTwoTest {
 	    	return input;
 	    }
 //	    					<.....     Getting border-color     .....>
-	    
-	    public WebElement BorderColor(String element) {
-	    	WebElement elem = null;
-	    	String expected = "rgb(220, 53, 69)";
-	    	assertTrue(expected == elem.findElement(By.xpath(element)).getCssValue("border-color"));
-	    	System.out.println(elem);
-	    	return elem;
+	    public String BorderColor(String element) {
+	    	WebElement elem = driver.findElement(By.cssSelector((element)));
+	    	String actual = elem.getCssValue("border-color");
+	    	System.out.println(elem.getCssValue("border-color" + "elem"));
+	    	return actual;
 	    }
 		@BeforeClass
 		public static void before() {	
@@ -145,8 +134,6 @@ public class ExTwoTest {
 			String page = "https://demoqa.com/automation-practice-form";
 			driver.get(page);
 		}
-//								<......     Invalid Test Cases     .....>
-	
 //								<......    Empty Test for mandatory Test Cases     .....>
 		@Test
 		public void EmptyCheck() throws InterruptedException {
@@ -171,98 +158,69 @@ public class ExTwoTest {
 			assertTrue(radioWmen.isSelected() == false);
 			assertTrue(radioOther.isSelected() == false );
 			assertTrue(inputMob.isSelected() == false);	  
-	 }	
-	//							<.......     *********     ..........>		
-		
-	//							<........     InValid Test Cases    ......>
-		@Test
-		public void MinSizeTest() throws InterruptedException {		
-			WebElement radioOne 	 = this.locatorCSS("#gender-radio-1");
-			WebElement radioTwo 	 = this.locatorCSS("#gender-radio-2");
-			WebElement radioThree 	 = this.locatorCSS("#gender-radio-3");
-			WebElement submitButton  = this.locatorCSS("#submit");
-			Thread.sleep(1000);
-			WebElement Fname         = this.MinValTest("#firstName");
-			WebElement Lname         = this.MinValTest("#lastName");
-			WebElement MobNum        = this.MinValTest("#userNumber");
-			Thread.sleep(4000);
-			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
-			submitButton.click();
-			js.executeScript("window.scrollBy(0,-400)", "");
-			Thread.sleep(1000);	
-			if(driver.findElement(By.cssSelector("body > div.fade.modal.show > div > div")).isDisplayed()) {
-				fail("Test case should be fail");
-			}else {
-				System.out.println("Error handling succeed");
-				assertTrue(true);
-			}	
-		}		
-		//					.....     MaxSize Test     .....
-		@Test
-		public void MaxSizeTest() throws InterruptedException {		
-			WebElement radioOne 	 = this.locatorCSS("#gender-radio-1");
-			WebElement submitButton  = this.locatorCSS("#submit");
-			Thread.sleep(1000);
-			WebElement Fname         = this.MaxValTest("#firstName");
-			WebElement Lname         = this.MaxValTest("#lastName");
-			WebElement MobNum        = this.MaxNumTest("#userNumber");
-			Thread.sleep(4000);
-			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
-			submitButton.click();
-			js.executeScript("window.scrollBy(0,-400)", ""); 
-//			if(driver.findElement(By.cssSelector("body > div.fade.modal.show > div > div")).isDisplayed()) {
-//			fail("Test case should be fail");
-//		}else {
-//			System.out.println("Error handling succeed");
-//			assertTrue(true);
-//		}
-			String border = this.locatorXpath("//*[@id=\"firstName\"]").getCssValue("border-color");
-			System.out.println(border);
-		}
-				
-							//		.....     MaxSize Test     .....
-		@Test
-		public void SplCharacterTest() throws InterruptedException {		
-				WebElement radioOne 	 = this.locatorCSS("#genterWrapper > div.col-md-9.col-sm-12 > div:nth-child(1) > label");
-				WebElement submitButton  = this.locatorCSS("#submit");
-				Thread.sleep(1000);
-				WebElement Fname         = this.SplCharTest("#firstName");
-				WebElement Lname         = this.SplCharTest("#lastName");
-				radioOne.click();
-				WebElement MobNum        = this.SplCharTest("#userNumber");
-				Thread.sleep(2000);
-				js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
-				submitButton.click();
-				js.executeScript("window.scrollBy(0,-400)", "");
-				Thread.sleep(1000);
-				WebElement popUp = driver.findElement(By.cssSelector("body > div.fade.modal.show > div > div"));
-					if(popUp.isDisplayed()) {
-						fail("Test case should be fail");
-					}else {
-						System.out.println("Error handling succeed");
-						assertTrue(true);
-					}
-			}
-		
-	//							<........     Valid Test Cases    ......>
-		
-	//							<......     Title Test     ......>
+	 }		
+//		  						<......     Title Test     ......>
 		@Test
 		public void TitleTest() throws InterruptedException { 
 			WebElement header = driver.findElement(By.cssSelector(".practice-form-wrapper > h5:nth-child(1)"));
 			js.executeScript("arguments[0].scrollIntoView(true);",header);
 			assertEquals("Student Registration Form",this.locatorCSS(".practice-form-wrapper > h5:nth-child(1)").getText());
-		}
-	//							<........     Input Label Test     ......>
+}	
+//								<........     Input Label Test     ......>
 		@Test
-		public void InputLabelTest() {
+		public void FnamenputLabelTest() {
 			assertEquals("Name",this.locatorCSS("#userName-label").getText());
 		}
-	//							<........     First name InputBox Test     ......>
-		@Test
-		public void FnameInputCheck() throws InterruptedException {
+//								<........    Fname-Test Cases    ......>	
+		@Test 
+		public void InputFnameMinValTest () throws InterruptedException {
 			
-			driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
+			WebElement Fname         = this.locatorCSS("#firstName");
+			Fname         = this.MinValTest("#firstName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Fname);
+			assertTrue(ExpectedColor == this.BorderColor("#firstName").toString());
+			assertEquals("Minimum value error for the firstName input field is not handled",ExpectedColor,this.BorderColor("#firstName").toString());
+		}	
+		@Test 
+		public void InputFnameMaxValTest () throws InterruptedException {
+			WebElement Fname         = this.locatorCSS("#firstName");
+			Fname         			 = this.MaxValTest("#firstName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Fname);
+			assertEquals("Maximum value for the firstName input field is not handled",ExpectedColor,this.BorderColor("#firstName").toString());
+		}
+		@Test 
+		public void InputFnameSplCharTest () throws InterruptedException {
+			WebElement Fname         = this.locatorCSS("#firstName");
+			Fname         = this.SplCharTest("#firstName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Fname);
+			assertEquals("Special character only error for the firstName input field is not handle",ExpectedColor,this.BorderColor("#firstName").toString());
+		}
+		@Test
+		public void InputFnameSplCharTestTwo() throws InterruptedException {
+			WebElement Fname         = this.locatorCSS("#firstName");
+			Fname         = this.SplCharTestTwo("#firstName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Fname);
+			assertEquals("Special character only value error for the firstName input field is not handle",ExpectedColor,this.BorderColor("#firstName").toString());
+		}
+//		<........     First name InputBox **Valid Test**     ......>
+		@Test
+		public void FnameInputValidCheck() throws InterruptedException {
 			WebElement fnameInput = this.locatorCSS("#firstName");
 			Thread.sleep(1000);
 			fnameInput.click();
@@ -271,7 +229,53 @@ public class ExTwoTest {
 			String ExpectedInput = "Hari";
 			assertEquals(ExpectedInput,fnameInput.getAttribute("value"));
 		}
-	//							<........    Last name InputBox Test     ......>	
+//							.........          *****          ..........
+		@Test 
+		public void InputLnameMinValTest () throws InterruptedException {
+			WebElement Lname         = this.locatorCSS("#lastName");
+			Lname         = this.MinValTest("#lastName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Lname);
+			assertTrue(ExpectedColor == this.BorderColor("#lastName").toString());
+			assertEquals("Minimum value error for the firstName input field is not handled",ExpectedColor,this.BorderColor("#firstName").toString());
+		}	
+		@Test 
+		public void InputLnameMaxValTest () throws InterruptedException {
+			WebElement Lname         = this.locatorCSS("#lastName");
+			Lname         			 = this.MaxValTest("#lastName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Lname);
+			assertEquals("Maximum value for the firstName input field is not handled",ExpectedColor,this.BorderColor("#firstName").toString());
+		}
+		@Test 
+		public void InputLnameSplCharTest () throws InterruptedException {
+			WebElement Lname         = this.locatorCSS("#lastName");
+			Lname         = this.SplCharTest("#lastName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Lname);
+			assertEquals("Special character only error for the lastName input field is not handle",ExpectedColor,this.BorderColor("#firstName").toString());
+		}
+		@Test
+		public void InputLnameSplCharTestTwo() throws InterruptedException {
+			WebElement Lname         = this.locatorCSS("#lastName");
+			Lname        = this.SplCharTestTwo("#lastName");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Lname);
+			assertEquals("Special character only value error for the lastName input field is not handle",ExpectedColor,this.BorderColor("#firstName").toString());
+		}
+//									<........    Last name InputBox  ValidTest     ......>	
 		@Test
 		public void LnameInputCheck() throws InterruptedException  {
 			driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
@@ -283,16 +287,73 @@ public class ExTwoTest {
 			lnameInput.sendKeys("Haran");
 			String ExpectedInput = "Haran";
 			assertEquals(ExpectedInput,lnameInput.getAttribute("value"));
-		}
-	//							<........   Email Label Test     ......>	
+			}
+//											.....     *****     .....	
 		@Test
 		public void EmailLabelTest() {
 			assertEquals("Email",this.locatorCSS("#userEmail-label").getText());
 		}
-		//						<........     Email InputBox Test     ......>
+		@Test 
+		public void EmailInvalidTest () throws InterruptedException {
+			WebElement Email        = this.locatorCSS("#userEmail");
+			Email.click();
+			Email.sendKeys("12345678@234");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Email);
+			assertTrue(ExpectedColor == this.BorderColor("#userEmail").toString());
+			assertEquals("Minimum value error for the Email input field is not handled",ExpectedColor,this.BorderColor("#userEmail").toString());
+		}
+		public void EmailInvalidTest2 () throws InterruptedException {
+			WebElement Email        = this.locatorCSS("#userEmail");
+			Email.click();
+			Email.sendKeys("@@@@@@@@@@@");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Email);
+			assertTrue(ExpectedColor == this.BorderColor("#userEmail").toString());
+			assertEquals("Minimum value error for the Email input field is not handled",ExpectedColor,this.BorderColor("#userEmail").toString());
+		}
+		@Test 
+		public void EmailMaxValTest () throws InterruptedException {
+			WebElement Email         = this.locatorCSS("#userEmail");
+			Email         			 = this.MaxValTest("#userEmail");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Email);
+			assertEquals("Maximum value for the Email input field is not handled",ExpectedColor,this.BorderColor("#userEmail").toString());
+		}
+		@Test 
+		public void EmaileSplCharTest () throws InterruptedException {
+			WebElement Email        = this.locatorCSS("#userEmail");
+			Email         = this.SplCharTest("#userEmail");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Email);
+			assertEquals("The minimum value error for the Email input field is not handle",ExpectedColor,this.BorderColor("#userEmail").toString());
+		}
+		@Test
+		public void EmailSplCharTestTwo() throws InterruptedException {
+			WebElement Email         = this.locatorCSS("#userEmail");
+			Email       = this.SplCharTestTwo("#userEmail");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",Email);
+			assertEquals("The minimum value error for the Email input field is not handle",ExpectedColor,this.BorderColor("#userEmail").toString());
+		}
+		//						<........     Email InputBox Valid Test     ......>
 		@Test
 		public void EmailInputCheck() throws InterruptedException {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WebElement email = this.locatorCSS("#userEmail");
 			email.click();
 			email.clear();
@@ -300,13 +361,13 @@ public class ExTwoTest {
 			String ExpectedInput = "hariharan7373@gmail.com";
 			assertEquals(ExpectedInput,email.getAttribute("value"));
 		}
-		//						<........   Gender Label Test     ......>	
+//								.........      *****     .......
 		@Test
 		public void GenderLabelTest() {
 		
 			assertEquals("Gender",this.locatorCSS("#genterWrapper > div.col-md-3.col-sm-12").getText());	
 		}
-	//							<........  Radio Buton Test     ......>
+	//							<........  Radio Buton Valid Test     ......>
 		@Test
 		public void RadioOne() throws InterruptedException {
 			WebElement radioOne = this.locatorCSS("#gender-radio-1");
@@ -331,16 +392,77 @@ public class ExTwoTest {
 		}	
 	//								<........  MobileNumLabel Test     ......>
 		@Test
-		public void MobileNumLabelTest() {
+		public void MobNumLabelTest() {
 			assertEquals("Mobile(10 Digits)",this.locatorCSS("#userNumber-label").getText());
 		}
-	//								<........  MobileNumInput Test     ......>
+		@Test 
+		public void MobNumMinValTest () throws InterruptedException {	
+			WebElement MobNum         = this.locatorCSS("#userNumber");
+			MobNum         = this.MinValTest("#userNumber");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",MobNum);
+			assertTrue(ExpectedColor == this.BorderColor("#userNumber").toString());
+			assertEquals("Minimum value error for the Mobile Number input field is not handled",ExpectedColor,this.BorderColor("#userNumber").toString());
+		}	
+		@Test 
+		public void MobNumMaxValTest () throws InterruptedException {
+			WebElement MobNum         = this.locatorCSS("#userNumber");
+			MobNum         			 = this.MaxValTest("#userNumber");
+			WebElement submitButton  = this.locatorCSS("#userNumber");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",MobNum);
+			assertEquals("Maximum value for the Mobile input field is not handled",ExpectedColor,this.BorderColor("#userNumber").toString());
+		}
+		@Test 
+		public void MobNumSplCharTest () throws InterruptedException {
+			WebElement MobNum         = this.locatorCSS("#userNumber");
+			MobNum.click();
+			MobNum.clear();
+			MobNum.sendKeys("0000000000");
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
+			submitButton.click();
+			js.executeScript("arguments[0].scrollIntoView(true);",MobNum);
+			assertEquals("Special character only error for the Mobile input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
+			Thread.sleep(1000);
+		}
+		@Test
+		public void MobNumSplCharTestTwo() throws InterruptedException {
+			WebElement MobNum1         = driver.findElement(By.cssSelector("userNumber"));
+			MobNum1.click();
+			MobNum1.clear();
+			MobNum1.sendKeys("@#$%^&*?!~");
+			Thread.sleep(1000);
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			assertEquals("Special character only value error for the firstName input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
+		}
+		@Test
+		public void MobNumCharTest() throws InterruptedException {
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			WebElement MobNum2         = driver.findElement(By.cssSelector("userNumber"));
+			Thread.sleep(500);
+			MobNum2.click();
+			MobNum2.clear();
+			MobNum2.sendKeys("qwaszxcder");
+			Thread.sleep(1000);
+			WebElement submitButton  = this.locatorCSS("#submit");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			assertEquals("Special character only value error for the firstName input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
+		}
+	//							<........  MobileNumInput Valid Test     ......>
 		@Test
 		public void MobileNumInputTest() {
-			
-			WebElement mobNumInput = this.locatorCSS("#userNumber");
-			assertEquals("10",mobNumInput.getAttribute("minlength"));
-			assertEquals("10",mobNumInput.getAttribute("maxlength"));
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+			WebElement mobNumInput = driver.findElement(By.cssSelector("userNumber"));
+			assertEquals("10",mobNumInput.getAttribute("minlength").toString());
+			assertEquals("10",mobNumInput.getAttribute("maxlength").toString());
 			mobNumInput.click();
 			mobNumInput.clear();
 			mobNumInput.sendKeys("9876543210");
@@ -352,9 +474,31 @@ public class ExTwoTest {
 			
 			assertEquals("Date of Birth", this.locatorCSS("#dateOfBirth-label").getText());
 		}
+		@Test
+		public void DobInputInvalidCharTest() throws InterruptedException {
+			driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
+			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			Thread.sleep(1000);
+			dobInput.click();
+			dobInput.sendKeys("ab");
+			dobInput.sendKeys(Keys.RETURN);
+			assertEquals("Proper format DOB input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
+		}
+		@Test
+		public void DobInputInvalidNumTest() {
+			driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
+			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
+			String ExpectedColor = "rgb(220, 53, 69)";
+			dobInput.click();
+			dobInput.sendKeys("00");
+			dobInput.sendKeys(Keys.RETURN);
+			assertEquals("Proper format DOB input field is not handle",ExpectedColor,this.BorderColor("#userNumber").toString());
+		}
 	//									<........  DobInputTest     ......>
 		@Test
-		public void DobInputTest() {			
+		public void DobInputTest() {
+			driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
 			WebElement dobInput = this.locatorCSS("#dateOfBirthInput");
 			dobInput.click();
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -381,9 +525,8 @@ public class ExTwoTest {
 			Thread.sleep(2000);
 			subInput.sendKeys(Keys.RETURN);
 			Thread.sleep(1000);
-			WebElement ans = driver.findElement(By.cssSelector("#subjectsContainer > div > div > div > div"));
+			WebElement ans = driver.findElement(By.xpath("//*[@id=\"subjectsContainer\"]/div/div[1]/div[1]/div[1]"));
 			assertEquals( "Computer Science",ans.getText());
-			
 		}
 	//									<........  HobbiesLabelTest     ......>
 		@Test
@@ -400,7 +543,7 @@ public class ExTwoTest {
 		  }
 		@Test 
 		public void CheckBoxChecked() throws InterruptedException {	
-			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(35, TimeUnit.SECONDS);
 			WebElement Cbox  = driver.findElement(By.cssSelector("#hobbies-checkbox-1"));
 			WebElement CboxL  = driver.findElement(By.cssSelector("#hobbiesWrapper > div.col-md-9.col-sm-12 > div:nth-child(1) > label"));
 			WebElement CboxOne  = driver.findElement(By.cssSelector("#hobbies-checkbox-2"));
@@ -433,7 +576,6 @@ public class ExTwoTest {
 		//							<........  PictureInput LabelTest     ......>
 		@Test
 		public void PictureLabelTest() {
-
 			assertEquals("Picture", this.locatorCSS("#userForm > div:nth-child(8)>div>label").getText());
 			
 		}
@@ -450,7 +592,6 @@ public class ExTwoTest {
 //									<........  HobbiesLabelTest     ......>
 		@Test
 		public void AddressLabelTest() {
-
 			assertEquals("Current Address", this.locatorCSS("#currentAddress-label").getText());
 		}	
 //									<........  AddresInput Test     ......>
@@ -473,6 +614,7 @@ public class ExTwoTest {
 //									<.....     StateCityDropDown Test     .....>
 		@Test
 		public void StateCityDropDownTest() throws InterruptedException {
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 				WebElement stateDropDown  = this.locatorCSS("#state > div");
 				WebElement stateInput  	  = this.locatorCSS("#react-select-3-input");
 				WebElement cityDropDown   = this.locatorCSS("#city > div");
@@ -497,15 +639,14 @@ public class ExTwoTest {
 //									<.....    Submit buttton Test     .....>
 		@Test
 		public void  SubmitButtonTest() throws InterruptedException{
-			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WebElement submitButton  = this.locatorCSS("#submit");
 			js.executeScript("arguments[0].scrollIntoView(true);",submitButton);
 			Thread.sleep(500);
 			submitButton.click();
 		}
 		@Test
-		public void PopUpWindow() {
-			try {	
+		public void PopUpWindow() {	
 				WebElement preview = this.locatorCSS("body > div.fade.modal.show > div > div");	
 					if(preview.isDisplayed()) {
 							assertEquals("Hari Haran",this.locatorCSS("div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(1) > td:nth-child(2)").getText().toString());
@@ -526,7 +667,7 @@ public class ExTwoTest {
 								}
 							assertEquals("9876543210",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").getText());
 							assertEquals("29 February,2000",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)").getText());
-							assertEquals("Computer Science",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(6) > td:nth-child(2)").getText());
+							assertEquals("Computer Science",this.locatorCSS(".table-responsive>table>tbody>tr:nth-child(6)>td:last-of-type").getText());
 							assertEquals("Sports, Music",this.locatorCSS(".fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(7) > td:nth-child(2)").getText());
 							assertEquals("mh.jpg",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(8) > td:nth-child(2)").getText());
 							assertEquals("187 Ramalayam colony covai.",this.locatorCSS(".modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)").getText());
@@ -535,11 +676,6 @@ public class ExTwoTest {
 					}else{
 						System.out.println("PopUp window is not displayed");
 					}
-				
-				
-			}catch(Exception e) {
-					System.out.println(e);
-			}
 		}
 		@Test
 		public void CloseButtonTest() throws InterruptedException {
@@ -549,11 +685,8 @@ public class ExTwoTest {
 			Thread.sleep(2000);
 			closeButton.click();
 		}
-		
-//	@AfterClass
-//		public static void QuitTab() {
-//			
-//			driver.quit();
-//		}
-	
+	@AfterClass
+		public static void QuitTab() {	
+			driver.quit();
+		}
   }	  
