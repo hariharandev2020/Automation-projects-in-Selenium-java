@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite>
+    <test>
+        <classes>
+            <class name = "test.AppTest"></class>
+            <class name = "OpenPage" ></class>
+        </classes>
+
+    </test>
+
+</suite>
