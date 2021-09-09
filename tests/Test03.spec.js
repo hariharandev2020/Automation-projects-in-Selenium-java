@@ -16,6 +16,9 @@ fixture `Test JQuery UI page`
     const r3 = Selector('input[type=radio]').nth(2);
     const ex1 = "rgb(0, 127, 255";
     const ex2 = "rgb(246, 246, 246)";
+    const lbl    = Selector('label[for=radio-1]');
+    const lbl1    = Selector('label[for=radio-2]');
+    const lb2    = Selector('label[for=radio-3]');
 
 test('Radio 1', async t => {
     page.browserscroll();
@@ -43,7 +46,6 @@ test('Radio -4 test', async t => {
     page.browserscroll(); 
         await t .switchToIframe(iframe)
         await t.expect(r1.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 });
-        const lbl    = Selector('label[for=radio-1]');
         await t.expect(r2.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 });
         await t.expect(r3.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 });
         await t
@@ -57,12 +59,10 @@ test('Radio -4 test', async t => {
 test('Radio -5 test', async t => {
     page.browserscroll();
         await t .switchToIframe(iframe)
-        const lbl    = Selector('label[for=radio-2]');
         await t.expect(r1.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 })
         await t.expect(r2.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 })
         await t.expect(r3.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 })
-        .click(Selector('label').withAttribute('for', 'radio-2'));
-        await t
+        .click(Selector('label').withAttribute('for', 'radio-2'))
         .expect(ex2).ok(r1.getStyleProperty('backgroundcolor'))
         .expect(ex1).ok(r2.getStyleProperty('backgroundcolor'))
         .expect(lbl.classNames).contains('ui-checkboxradio-checked')
@@ -71,12 +71,9 @@ test('Radio -5 test', async t => {
 test('Radio -6 test', async t => {
     page.browserscroll();
         await t .switchToIframe(iframe)
-        const lbl    = Selector('label[for=radio-3]');
         await t.expect(r1.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 });
         await t.expect(r2.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 });
         await t.expect(r3.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 });
-        const ex1 = "rgb(0, 127, 255";
-        const ex2 = "rgb(246, 246, 246)";
         await t
         .click(Selector('label').withAttribute('for', 'radio-3'));
         await t
