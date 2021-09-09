@@ -22,7 +22,7 @@ const lbl2   = Selector('label[for=checkbox-2]');
 const lbl3    = Selector('label[for=checkbox-3]');
 const lbl4    = Selector('label[for=checkbox-4]');
 
-test.skip("Checkbox -1-active", async t => {
+test("Checkbox -1-active", async t => {
     page.browserscroll();
     await t .switchToIframe(iframe)
     await t.expect(c1.hasAttribute('disabled')).notOk('ready for testing');        
@@ -34,14 +34,14 @@ test.skip("Checkbox -1-active", async t => {
         const txt = await actual.innerText;
         await t.expect(txt.toString()).eql(' 2 Star', 'check element text');
 })
-test.skip("Checkbox -2-active", async t => {
+test("Checkbox -2-active", async t => {
     page.browserscroll();
     await t .switchToIframe(iframe)
         const actual = Selector('label[for=checkbox-2]');
         const txt = await actual.innerText;
         await t.expect(txt.toString()).eql(' 3 Star', 'check element text');
 })
-test.skip("Checkbox -3-active", async t => {
+test("Checkbox -3-active", async t => {
     page.browserscroll();
     await t .switchToIframe(iframe)
         .expect(c3.hasAttribute('disabled')).notOk('ready for testing');
@@ -49,7 +49,7 @@ test.skip("Checkbox -3-active", async t => {
         const txt = await actual.innerText;
         await t.expect(txt.toString()).eql(' 4 Star', 'check element text', { timeout: 500 });
 })
-test.skip("Checkbox -4-active", async t => {
+test("Checkbox -4-active", async t => {
     page.browserscroll();
     await t .switchToIframe(iframe)
         .expect(c4.hasAttribute('disabled')).notOk('ready for testing')
@@ -91,7 +91,7 @@ test.skip('Checkbox -1,2 test', async t => {
         .expect(ex2).ok(c3.getStyleProperty('backgroundcolor')) 
         .expect(ex2).ok(c4.getStyleProperty('backgroundcolor')); 
 })
-test.skip("Checkbox -1,2,3",async t =>{
+test("Checkbox -1,2,3",async t =>{
     page.browserscroll();
     await t .switchToIframe(iframe)
         .click(Selector('label').withAttribute('for', 'checkbox-1'))
@@ -102,7 +102,7 @@ test.skip("Checkbox -1,2,3",async t =>{
         .expect(ex1).ok(c3.getStyleProperty('backgroundcolor'))
         .expect(ex2).ok(c4.getStyleProperty('backgroundcolor')); 
 })
-test.skip('Checkbox 1,2,3,4 test', async t =>{
+test('Checkbox 1,2,3,4 test', async t =>{
     page.browserscroll();
     await t .switchToIframe(iframe)
     await t
