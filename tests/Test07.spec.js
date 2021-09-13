@@ -10,46 +10,49 @@ fixture `Test JQuery UI page`
     const datePicker  = Selector('a').withExactText('Datepicker');
     await t.click(datePicker);
 })
-const iframe = Selector(".demo-frame"); 
-const lbl    = Selector('p').nth(0);
-const input  = Selector('#datepicker');
 const main   = Selector('#ui-datepicker-div');
-const left   = Selector('#ui-datepicker-div span').withExactText('Prev');
-const right  = Selector('#ui-datepicker-div span').withExactText('Next');
-const date   = Selector('#ui-datepicker-div a').withExactText('21');
-const monthPic = Selector('#ui-datepicker-div > div > div > .ui-datepicker-month');
-const datePic  = Selector('#ui-datepicker-div a').withExactText('12');
-const yearPic  = Selector('#ui-datepicker-div > div > div > .ui-datepicker-year');
+
 test('Label Test',async t => {
     page.browserscroll();
-    await t .switchToIframe(iframe)
-    const name = await lbl.innerText;
-    await t.expect(lbl.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 })
+    await t .switchToIframe('.demo-frame');
+    const label    = Selector('p').nth(0);
+    const name = await label.innerText;
+    await t.expect(label.hasAttribute('disabled')).notOk('ready for testing', { timeout: 5000 })
     .expect(name).eql('Date: ');
 })
 test('Input Enter Date',async t => {
     page.browserscroll();
-    await t .switchToIframe(iframe)
-    .click(input)
-    await t.expect(input.getAttribute('type')).contains('text');
+    await t .switchToIframe('.demo-frame');
+    const input    = Selector('#datepicker');
+    const monthPic = Selector('#ui-datepicker-div > div > div > span.ui-datepicker-month');
+    const datePic  = Selector('#ui-datepicker-div a').withExactText('12');
+    const yearPic  = Selector('#ui-datepicker-div > div > div > .ui-datepicker-year');
     await t
-    .typeText(input, '12/07/2000')
-    .expect(await monthPic.innerText).eql('July')
-    .expect(await yearPic.innerText).eql('2000')
-    .expect(await datePic.innerText).eql('12')
-    .expect(await datePic.getAttribute('background-color')).contains('rgb(0 127 255)')
-    .expect(await input.value).eql('12/07/2000');
-
+    .click(input)
+    .typeText(await input, '07/12/2000')
+    .pressKey('enter')
+    await t.click(input)
+    await t.expect(await monthPic.innerText).contains('July')
+    .expect(await yearPic.innerText).contains('2000')
+    .expect(await datePic.innerText).contains('12')
+    // console.log(await datePic.getStyleProperty('background-color'));
+    .expect(await datePic.getStyleProperty('background-color')).contains('rgb(0, 127, 255)')
+    await t.expect(await input.value).contains('07/12/2000');
 })
 test('Select Date',async t => {
     page.browserscroll();
-    await t .switchToIframe(iframe)
-    .expect(input.getAttribute('type')).eql('text')
+    await t .switchToIframe('.demo-frame');
+    const monthPic = Selector('#ui-datepicker-div > div > div > .ui-datepicker-month');
+    const input  = Selector('#datepicker');
+    const left   = Selector('#ui-datepicker-div span').withExactText('Prev');
+    const right  = Selector('#ui-datepicker-div span').withExactText('Next');
+    const date   = Selector('#ui-datepicker-div a').withExactText('21');
+    await t.expect(input.getAttribute('type')).eql('text')
     .click(input);
     await t.click(left)
     .expect(await monthPic.innerText).eql('September');
     await t.click(right)
     .expect(await monthPic.innerText).eql('August');
-    await t.click(date) .wait(1000)  
-    .expect(await input.value).contains('08/21/2021');
+    await t.click(date)
+    .expect(input.value).contains('09/21/2021');
 })
