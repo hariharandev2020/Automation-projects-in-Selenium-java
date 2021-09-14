@@ -11,33 +11,13 @@ fixture `Test JQuery UI page`
     await t.click(smenu);
 });
 
-const speed      = Selector('label[for=speed-button]');
-const speedInput = Selector('#speed-button');
-const txt1       = Selector('#speed-button > span.ui-selectmenu-text');
-const txt2       = Selector('#files-button > span.ui-selectmenu-text'); 
-const txt3       = Selector('#number-button > span.ui-selectmenu-text'); 
-const txt4       = Selector('#salutation-button > span.ui-selectmenu-text');      
-const lisp1      = Selector('#ui-id-1');
-const lisp2      = Selector('#ui-id-5');
-const liheader   = Selector('#files-menu > li:nth-child(1)');
-const lihead     = Selector('#files-menu > li:nth-child(4)');
-const lif       = Selector('#files-menu > li:nth-child(6)>div');
-const files      = Selector('label[for=files-button]');
-const filesInput = Selector('#files-button');
-const number     = Selector('label[for=number-button]');
-const numberInput= Selector('#number-button');
-const lin1      = Selector('#ui-id-10');
-const lin2      = Selector('#ui-id-15');
-const lin3      = Selector('#ui-id-19');
-const title      = Selector('label[for=salutation-button]');
-const titleInput= Selector('#salutation-button');
-const lit1      = Selector('#ui-id-2');
-const lit2      = Selector('#ui-id-4');
-const lit3      = Selector('#ui-id-6');
-
 test('Select menu menu label checkbox', async t => {
     page.browserscroll();
-    await t.switchToIframe('.demo-frame')
+    await t.switchToIframe('.demo-frame');
+    const speed      = Selector('label[for=speed-button]');
+    const files      = Selector('label[for=files-button]');
+    const number     = Selector('label[for=number-button]');
+    const title      = Selector('label[for=salutation-button]');
     await t.expect(await speed.innerText).contains('Select a speed');
     await t.expect(await files.innerText).contains('Select a file');
     await t.expect(await number.innerText).contains('Select a number');
@@ -45,7 +25,11 @@ test('Select menu menu label checkbox', async t => {
 });
 test('Select input visible text checkbox', async t => {
     page.browserscroll();
-    await t.switchToIframe('.demo-frame')
+    await t.switchToIframe('.demo-frame');
+    const speedInput = Selector('#speed-button');
+    const filesInput = Selector('#files-button');
+    const numberInput = Selector('#number-button');
+    const titleInput = Selector('#salutation-button');
     await t.expect(await speedInput.getAttribute('class')).notContains('disabled');
     await t.expect(await filesInput.getAttribute('class')).notContains('disabled');
     await t.expect(await numberInput.getAttribute('class')).notContains('disabled');
@@ -53,7 +37,11 @@ test('Select input visible text checkbox', async t => {
 });
 test('Speed Input test', async t => { await
     page.browserscroll();
-    await t.switchToIframe('.demo-frame')
+    await t.switchToIframe('.demo-frame');
+    const speedInput = Selector('#speed-button');
+    const txt1       = Selector('#speed-button > span.ui-selectmenu-text');
+    const lisp1      = Selector('#ui-id-1');
+    const lisp2      = Selector('#ui-id-5');
     await t.expect(await txt1.innerText).eql('Medium')
     .click(speedInput)
     .click(lisp1)
@@ -64,7 +52,12 @@ test('Speed Input test', async t => { await
 })
 test('flie Input test', async t => { await
     page.browserscroll();
-    await t.switchToIframe('.demo-frame')
+    await t.switchToIframe('.demo-frame');
+    const filesInput = Selector('#files-button');
+    const lif       = Selector('#files-menu > li:nth-child(6)>div');
+    const txt2       = Selector('#files-button > span.ui-selectmenu-text'); 
+    const liheader   = Selector('#files-menu > li:nth-child(1)');
+    const lihead     = Selector('#files-menu > li:nth-child(4)');
     await t.expect(await txt2.innerText).eql('jQuery.js')
     .click(filesInput)
     await t.expect(await liheader.innerText).eql('Scripts')
@@ -77,7 +70,12 @@ test('flie Input test', async t => { await
 })
 test('Number Input test', async t => { await
     page.browserscroll();
-    await t.switchToIframe('.demo-frame')
+    await t.switchToIframe('.demo-frame');
+    const txt3       = Selector('#number-button > span.ui-selectmenu-text'); 
+    const numberInput= Selector('#number-button');
+    const lin1      = Selector('#ui-id-10');
+    const lin2      = Selector('#ui-id-15');
+    const lin3      = Selector('#ui-id-19');
     await t.expect(await txt3.innerText).eql('2');
     await t.click(numberInput);
     await t.scrollIntoView(lin1);
@@ -95,6 +93,11 @@ test('Number Input test', async t => { await
 test('Title input test', async t => { await
     page.browserscroll();
     await t.switchToIframe('.demo-frame');
+    const txt4       = Selector('#salutation-button > span.ui-selectmenu-text');      
+    const titleInput= Selector('#salutation-button');
+    const lit1      = Selector('#ui-id-2');
+    const lit2      = Selector('#ui-id-4');
+    const lit3      = Selector('#ui-id-6');
     await t.expect(await txt4.innerText).eql('Please pick one');
     await t.click(titleInput);
     await t.click(lit1);
