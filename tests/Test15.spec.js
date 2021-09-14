@@ -10,19 +10,17 @@ fixture `Test JQuery UI page`
     const tooltip  = Selector('a').withExactText('Tooltip');
     await t.click(tooltip);
 });
-
-const link1 = Selector('a').withExactText('Tooltips');
-const link2 = Selector('a').withExactText('ThemeRoller');
-const label = Selector('label[for = age]');
-const input = Selector('#age');
-const p1    = Selector('p').nth(0);
-const p2    = Selector('p').nth(1);
-const p3    = Selector('p').nth(2);
-const p4    = Selector('p').nth(4);
-
 test("Tooltip text test", async t => {
     page.browserscroll();
     await t.switchToIframe('.demo-frame');
+    const link1 = Selector('a').withExactText('Tooltips');
+    const p1    = Selector('p').nth(0);
+    const link2 = Selector('a').withExactText('ThemeRoller');
+    const p2    = Selector('p').nth(1);
+    const p3    = Selector('p').nth(2);
+    const p4    = Selector('p').nth(4);
+    const label = Selector('label[for = age]');
+    const input = Selector('#age');
     await t.expect(await link1.innerText).eql('Tooltips');
     await t.expect(await p1.innerText).contains('can be attached to any element. When you hover the element with your mouse, the title attribute is displayed in a little box next to the element, just like a native tooltip.');
     await t.expect(await link2.innerText).contains("ThemeRoller");
@@ -38,12 +36,17 @@ test("Tooltip text test", async t => {
 test('A tag color test', async t => {
     page.browserscroll();
     await t.switchToIframe('.demo-frame');
+    const link1 = Selector('a').withExactText('Tooltips');
+    const link2 = Selector('a').withExactText('ThemeRoller');
     await t.expect(await link1.getStyleProperty('color')).contains("rgb(0, 0, 238)");
     await t.expect(await link2.getStyleProperty('color')).contains("rgb(0, 0, 238)");
 })
 test('Tooltip title check', async t=> { 
     page.browserscroll();
     await t.switchToIframe('.demo-frame');
+    const link1 = Selector('a').withExactText('Tooltips');
+    const link2 = Selector('a').withExactText('ThemeRoller');
+    const input = Selector('#age');
     await t.expect(await link1.getAttribute('title')).contains("That's what this widget is");
     await t.expect(await link2.getAttribute('title')).contains("ThemeRoller: jQuery UI's theme builder application");
     await t.expect(await input.getAttribute('title')).contains("We ask for your age only for statistical purposes.");
@@ -51,6 +54,9 @@ test('Tooltip title check', async t=> {
 test('Tooltip title check', async t=> { 
     page.browserscroll();
     await t.switchToIframe('.demo-frame');
+    const link1 = Selector('a').withExactText('Tooltips');
+    const link2 = Selector('a').withExactText('ThemeRoller');
+    const input = Selector('#age');
     await t.hover(link1);
     await t.expect(await link1.getAttribute('title')).notContains("That's what this widget is");
     await t.hover(link2);
@@ -61,6 +67,7 @@ test('Tooltip title check', async t=> {
 test("Input type test" , async t => {
     page.browserscroll();
     await t.switchToIframe('.demo-frame');
+    const input = Selector('#age');
     await t.typeText(input,'21');
     await t.expect(await input.value).contains("21");
 })
