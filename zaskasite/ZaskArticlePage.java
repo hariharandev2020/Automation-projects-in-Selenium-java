@@ -14,7 +14,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
 public class ZaskArticlePage {
@@ -62,27 +61,20 @@ public class ZaskArticlePage {
 		this.sendValue(elemTwo, valueTwo);
 		this.makeClick(elemOne);
 	}
-	public void TagInput(String elem,String elemOne,String value) throws InterruptedException {
-		this.selector(elem).click();
-		this.selector(elemOne).click();
-		this.selector(elemOne).sendKeys(Keys.BACK_SPACE);
-		this.selector(elemOne).sendKeys(Keys.BACK_SPACE);
-		this.sendValue(elemOne, value);
-		this.selector(elem).click();
-	}public void TagInputValue(String element,String value) throws InterruptedException {
+//	public void TagInput(String elem,String elemOne,String value) throws InterruptedException {
+//		this.selector(elem).click();
+//		this.selector(elemOne).click();
+//		this.selector(elemOne).sendKeys(Keys.BACK_SPACE);
+//		this.selector(elemOne).sendKeys(Keys.BACK_SPACE);
+//		this.sendValue(elemOne, value);
+//		this.selector(elem).click();
+//	}
+	public void TagInputValue(String element,String value) throws InterruptedException {
 		this.selector(element).click();
 		this.clearTags(element);
 		this.selector(element).sendKeys(value);
 		Thread.sleep(1000);
 		this.selector(element).sendKeys(Keys.ENTER);
-	}
-	public void DescriptionInput(String elem,String elemOne,String value) throws InterruptedException {
-		this.selector(elem).click();	
-		Thread.sleep(1000);
-		this.selector(elemOne).click();
-		Thread.sleep(1000);
-		this.selector(elemOne).sendKeys(value);
-		Thread.sleep(1000);
 	}
 	public void clearTags(String element) {
 		this.selector(element).sendKeys(Keys.BACK_SPACE);
@@ -103,6 +95,18 @@ public class ZaskArticlePage {
 		String id =  this.selector(element).getAttribute("id");
 		System.out.println(id);
 		return id;
+	}
+	public void AuthorInput(String element, String valOne,String valTwo,String valThree, String valFour,String valFive) throws InterruptedException {
+		this.sendValue(element,valOne);
+		this.selector(element).sendKeys(Keys.ENTER);
+		this.sendValue(element,valTwo);
+		this.selector(element).sendKeys(Keys.ENTER);
+		this.sendValue(element,valThree);
+		this.selector(element).sendKeys(Keys.ENTER);
+		this.sendValue(element,valFour);
+		this.selector(element).sendKeys(Keys.ENTER);
+		this.sendValue(element,valFive);
+		this.selector(element).sendKeys(Keys.ENTER);
 	}
 	@BeforeClass
 	public static void before() {
@@ -134,20 +138,15 @@ public class ZaskArticlePage {
 	public void ArticlesURLTest() {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		String expectedUrl = "https://zask.localpali.io/zask/articles?sort=New&filter=All";
+		String expect = "rgba(47, 175, 249, 1)";
 		this.makeClick("//a[text()='Articles']");
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		String actualUrl  = driver.getCurrentUrl();
+		String actual = this.selector("//a[text()='Articles']").getCssValue("background-color");
 		assertEquals(expectedUrl,actualUrl);
-	}						//	.....     ArticleButtonTest     .....
-	@Test 
-	public void ArticlesButtonTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		String expected = "rgba(47, 175, 249, 1)";
-		String actual = this.selector("//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/div/ul/li[2]/link-to/a").getCssValue("background-color");
-		System.out.println(actual);
-		assertEquals(expected,actual);
+		assertEquals(expect,actual);
 	}
-	//	.....    Add ArticleButtonTest     .....
+								//	.....    Add ArticleButtonTest     .....
 	@Test 
 	public void ADDArticlesButtonTest() {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -213,8 +212,7 @@ public class ZaskArticlePage {
 		this.selector(".ql-editor").clear();
 		this.sendValue("#add-question-title", "````Hi Hlo everyone``````");
 		this.makeClick("#add-question-submit");
-		this.selector("zask-ui-tags-multi-selector[restrict='restrict_max']").sendKeys(Keys.BACK_SPACE.BACK_SPACE);
-		Thread.sleep(300);
+		Thread.sleep(600);
 		assertFalse(driver.getPageSource().contains("Enter a post title of at least 15 characters."));
 		driver.navigate().refresh();
 	}
@@ -282,30 +280,18 @@ public class ZaskArticlePage {
 		Thread.sleep(1000);
 		List<WebElement> result = driver.findElements(By.tagName("zask-ui-search-result"));
 		int expected  = 7;
-		Thread.sleep(1000);
 		assertEquals(expected,result.size());
+		driver.navigate().refresh();
 	}	
-	//							.....    Tag Input Tag Test
-	//	@Test
-	//	public void TagInputSuggestionTest() throws InterruptedException {
-	//		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-	//		this.sendValue("input[placeholder='Add tags.']","test");
-	//		Thread.sleep(1000);
-	//		List<WebElement> result = driver.findElements(By.tagName("zask-ui-search-result"));
-	//		Thread.sleep(500);
-	//		System.out.println(result.contains("test"));
-	//		assertTrue(result.contains("test"));
-	//		Thread.sleep(3000);
-	//	}
-	//							.....     Tags Text Test      .....
+//									.....     Tags Text Test      .....
 	@Test
 	public void TagTextTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		this.sendValue("#add-question-title", "Add a title and provide in depth details about your article.");
 		String expect = "testing";
 		this.TagInputValue("input[placeholder='Add tags.']", "testing");
-		WebElement result = this.selector("zask-ui-tag-closable[tagname='testing']");
-		assertTrue(result.isDisplayed());
+		Thread.sleep(1000);
+		assertTrue(driver.getPageSource().contains("testing"));
 		driver.navigate().refresh();
 	}
 	//								.....     Description Invalid Test One    .....
@@ -313,41 +299,23 @@ public class ZaskArticlePage {
 	public void DescriptionInvalidTestOne() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		this.sendValue("#add-question-title", "Add a title and provide in depth details about your article.");
-		this.selector("#editor-outlet > div.ql-editor").clear();
-		this.sendValue("#editor-outlet > div.ql-editor.ql-blank > p", "abcdefgh");
+		this.sendValue("#editor-outlet > div.ql-editor", "Ecdshjbfard");
 		this.TagInputValue("input[placeholder='Add tags.']", "testing");
 		Thread.sleep(1000);
-		String expected = "abcdefgh";
-		System.out.println(this.selector("#editor-outlet > div.ql-editor > p").getText());
-		assertEquals(expected,this.selector("#editor-outlet > div.ql-editor > p").getText());
 		this.makeClick("#add-question-submit");
 		Thread.sleep(300);
 		assertTrue(driver.getPageSource().contains("Enter valid post content of at least 15 characters"));
 		driver.navigate().refresh();
 	}
-	//								.....     Description Invalid Test Two     ......
+	//								.....     Description Invalid Test Two     .....
 	@Test
 	public void DescriptionInvalidTestTwo() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		this.sendValue("#add-question-title", "Add a title and provide in depth details about your article.");
-		this.sendValue("#editor-outlet > div.ql-editor.ql-blank > p", "aaaavvvvvbbbbbbbbbbbb");
-		this.TagInputValue("input[placeholder='Add tags.']", "testing");
-		Thread.sleep(1000);
-		String expected = "aaaavvvvvbbbbbbbbbbbb";
-		assertEquals(expected,this.selector("#editor-outlet > div.ql-editor > p").getText());
-		this.makeClick("#add-question-submit");
-		assertTrue(driver.getPageSource().contains("Enter valid post content of at least 15 characters"));
-		driver.navigate().refresh();
-	}
-	//								.....     Description Invalid Test Three     .....
-	@Test
-	public void DescriptionInvalidTestThree() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		this.sendValue("#add-question-title", "Add a title and provide in depth details about your article.");
-		this.sendValue("#editor-outlet > div.ql-editor.ql-blank", "aa          ..           ..        .     .");
+		this.sendValue("#editor-outlet > div.ql-editor", "a       ,,            ..        bbb            aa");
 		this.TagInputValue("input[placeholder='Add tags.']", "testing");
 		String expected = "aa          ..           ..        .     .";
-		assertEquals(expected,this.selector("#editor-outlet > div.ql-editor > p").getText());
+		assertEquals(expected,this.selector("//*[@id=\"editor-outlet\"]/div[1]/p").getText());
 		this.makeClick("#add-question-submit");
 		Thread.sleep(300);
 		assertTrue(driver.getPageSource().contains("Enter valid post content of at least 15 characters"));
@@ -408,7 +376,7 @@ public class ZaskArticlePage {
 		String actual = bold.getCssValue("color");
 		assertEquals(expect,actual);
 	}
-	//	....     Underline Tool tip Test     .....
+	//							....     Underline Tool tip Test     .....
 	@Test
 	public void UnderlineTooltipTest() {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -430,7 +398,7 @@ public class ZaskArticlePage {
 		String actual = bold.getCssValue("color");
 		assertEquals(expect,actual);
 	}
-	//				....     Strike Tool tip Test     .....
+	//								....     Strike Tool tip Test     .....
 	@Test
 	public void StrikeTooltipTest() {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -444,51 +412,62 @@ public class ZaskArticlePage {
 	//								.....      Description Box Combo Tags Test -1   .....
 	@Test
 	public void DescriptionBoxIAllTagsTest() throws InterruptedException {
-		this.selector("#editor-outlet > div.ql-editor").clear();
 		this.sendValue("#add-question-title", "Add a title and provide in depth details about your article.");
-		this.selector("#editor-outlet > div.ql-editor").clear();
-		this.DescriptionInput("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-bold", "#editor-outlet > div.ql-editor.ql-blank", "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.");
-		String expect = "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.";
-		Thread.sleep(500);
-		String actual = this.selector("#editor-outlet > .ql-editor> p>strong").getText();
-		assertEquals(expect,actual);
+		this.selector("//*[@id=\"editor-outlet\"]/div[1]").clear();
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[1]").click();
+		this.selector("//*[@id=\"editor-outlet\"]/div[1]/p").sendKeys("This ");
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[1]").click();
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[2]").click();
+		this.selector("//*[@id=\"editor-outlet\"]/div[1]/p").sendKeys("is ");
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[2]").click();
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[3]").click();
+		this.selector("//*[@id=\"editor-outlet\"]/div[1]/p").sendKeys("combination ");
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[3]").click();
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[4]").click();
+		this.selector("//*[@id=\"editor-outlet\"]/div[1]/p").sendKeys("Test ");
+		this.selector("//*[@id=\"editor-1\"]/div[1]/span/button[4]").click();
+		this.makeClick("#add-question-submit");
+		Thread.sleep(1000);
+		this.makeClick("#modal-btn");
 	}
-	//								.....      Description Box Combo Tags Test -2   .....
+	//							.....     Description  after submit Bold text test    ......
 	@Test
-	public void DescriptionBoxIALlTagsTestTwo() throws InterruptedException {
-		this.DescriptionInput("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-italic", "#editor-outlet > div.ql-editor", "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.");
-		String expect = "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.";
-		Thread.sleep(500);
-		String actual = this.selector("#editor-outlet > .ql-editor p > em").getText();
-		Thread.sleep(1000);
-		assertEquals(expect,actual);
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-italic").click();
+	public void DescriptionBoxExSubmitBoldTest() throws InterruptedException {
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		String expected = "This";
+		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
+		String actual = this.selector("//*[@id="+ id +"]/div[2]/div[2]/div[2]/p/strong").getText();
+		assertEquals(expected,actual);
 	}
-	//								.....      Description Box Combo Tags Test -3   .....
+	//							.....     Description after submit Italic test    ......
 	@Test
-	public void DescriptionBoxIALlTagsTestThree() throws InterruptedException {
-		this.DescriptionInput("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-underline", "#editor-outlet > div.ql-editor", "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.");
-		String expect = "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.";
-		Thread.sleep(1000);
-		String actual = this.selector("#editor-outlet > .ql-editor > p > u").getText();
-		Thread.sleep(1000);
-		assertEquals(expect,actual);
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-underline").click();
+	public void DescriptionBoxExSubmitItalicTest() throws InterruptedException {
+		String expected = "is";
+		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
+		String actual = this.selector("//*[@id="+ id +"]/div[2]/div[2]/div[2]/p/em").getText();
+		assertEquals(expected,actual);
 	}
-	//								.....      Description Box Combo Tags Test - 4   .....
+	//							.....     Description after submit Underline test    ......
 	@Test
-	public void DescriptionBoxIALlTagsTestFur() throws InterruptedException {
-		this.DescriptionInput("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-strike", "#editor-outlet > div.ql-editor", "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.");
-		Thread.sleep(1000);
-		String expect = "Explain what your article is about. Make sure you tell the users how to use the presented code and highlight areas of interest if needed.";
-		String actual = this.selector("#editor-outlet > .ql-editor > p > s").getText();
-		Thread.sleep(1000);
-		assertEquals(expect,actual);
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-strike").click();
+	public void DescriptionBoxExSubmitUnderlineTest() throws InterruptedException {
+		String expected = "combiation";
+		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
+		String actual = this.selector("//*[@id="+ id +"]/div[2]/div[2]/div[2]/p/u").getText();
+		assertEquals(expected,actual);
 	}
-	//							.....      Description Box Combo Text Tag Test     .....
+	//							.....     Description after submit Strike test    ......
+	@Test
+	public void DescriptionBoxExSubmitStrikeTest() throws InterruptedException {
+		String expected = "Test";
+		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
+		String actual = this.selector("//*[@id="+ id +"]/div[2]/div[2]/div[2]/p/s").getText();
+		assertEquals(expected,actual);
+	}	
+			//							.....      Description Box Combo Text Tag Test     .....
 	@Test
 	public void DescriptionBoxB_I_UComboTest() throws InterruptedException {
+		driver.navigate().back();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		this.selector("#editor-outlet > div.ql-editor").clear();
 		this.TwoComboCheck("#editor-outlet > div.ql-editor > p", "#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-bold", "#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-italic", "#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-underline", "Description editor check");
 		Thread.sleep(1000);
@@ -627,90 +606,8 @@ public class ZaskArticlePage {
 		assertTrue(this.selector("#editor-outlet > div.ql-editor > p > em > s > u").isDisplayed());
 		driver.navigate().refresh();
 	}
-	//	.....      Description Box Bold Text Tag Test     .....
-	@Test
-	public void DescriptionBoxBoldTextTagTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		this.sendValue("#add-question-title", "Add a title and provide in depth details about your article.");
-		this.selector("#editor-outlet > div.ql-editor").clear();
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-bold").click();
-		this.selector("#editor-outlet > div.ql-editor > p").sendKeys("This is");
-		this.TagInputValue("input[placeholder='Add tags.']", "testing");
-		assertTrue(this.selector("#editor-outlet > div.ql-editor > p > strong").isDisplayed());
-	}
-	//							.....      Description Box Italic Text Tag Test     .....
-	@Test
-	public void DescriptionBoxItalicTagTest() throws InterruptedException {
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-italic").click();
-		this.selector(".ql-editor").click();
-		this.selector("#editor-outlet > div.ql-editor ").sendKeys("Junit");
-		Thread.sleep(1000);
-		assertTrue(this.selector("#editor-outlet > div.ql-editor > p > em").isDisplayed());
-	}
-	//					.....      Description Box Underline Text Tag Test     .....
-	@Test
-	public void DescriptionBoxUnderlineTagTest() throws InterruptedException {
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-underline").click();
-		this.selector(".ql-editor").click();
-		this.selector("#editor-outlet > div.ql-editor ").sendKeys("automation");
-		Thread.sleep(1000);
-		assertTrue(this.selector("#editor-outlet > div.ql-editor > p>strong > u").isDisplayed());
-		this.makeClick("#add-question-submit");
-		Thread.sleep(1000);
-		this.makeClick("#modal-btn");
-	}	
-	//							.....      Description Box Delete Tag Test     .....
-	@Test
-	public void DescriptionBoxDeleteTagTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		this.selector("#editor-1 > div.ql-toolbar.ql-snow > span > button.ql-strike").click();
-		this.selector(".ql-editor").click();
-		this.selector("#editor-outlet > div.ql-editor ").sendKeys("Testcase");
-		Thread.sleep(1000);
-		assertTrue(this.selector("#editor-outlet >div.ql-editor > p > s ").isDisplayed());
-	}
-	//							.....     Description  after submit Bold text test    ......
-	@Test
-	public void DescriptionBoxExSubmitBoldTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		String expected = "This is";
-		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
-		String actual = this.selector("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/strong").getText();
-		System.out.println("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/strong");
-		assertEquals(expected,actual);
-	}
-	//							.....     Description after submit Italic test    ......
-	@Test
-	public void DescriptionBoxExSubmitItalicTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		String expected = "Junit";
-		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
-		String actual = this.selector("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/em").getText();
-		System.out.println(this.selector("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/em"));
-		assertEquals(expected,actual);
-	}
-	//							.....     Description after submit Underline test    ......
-	@Test
-	public void DescriptionBoxExSubmitUnderlineTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		String expected = "automation";
-		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
-		String actual = this.selector("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/u").getText();
-		System.out.println("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/u");
-		assertEquals(expected,actual);
-	}
-	//							.....     Description after submit Strike test    ......
-	@Test
-	public void DescriptionBoxExSubmitStrikeTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		String expected = "Testcase";
-		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
-		String actual = this.selector("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/s").getText();
-		System.out.println("//*[@id='"+ id +"']/div[2]/div[2]/div[2]/p/s");
-		assertEquals(expected,actual);
-		driver.navigate().refresh();
-	}	
-	//		.....      Description check     ......
+
+					//		.....      Description check     ......
 	@Test
 	public void DescriptionBoxTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -727,7 +624,6 @@ public class ZaskArticlePage {
 	public void LinkLabelTest() throws InterruptedException {
 		String expect = "Link";
 		assertEquals(expect,this.selector(".add-link>div:first-of-type").getText());
-		System.out.println(this.selector(".add-link>div:first-of-type").getText());
 		Thread.sleep(400);
 		driver.navigate().refresh();
 	}
@@ -775,7 +671,7 @@ public class ZaskArticlePage {
 		Thread.sleep(1000);
 		driver.navigate().refresh();
 	}
-	// 								.....  ink Input invalid Test Four 
+	// 								.....  Link Input invalid Test Four 
 	@Test
 	public void LinkInputInvalidTestFour() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -789,7 +685,7 @@ public class ZaskArticlePage {
 		assertTrue(driver.getPageSource().contains("Enter a valid Link"));
 		driver.navigate().refresh();
 	}
-	// 	.....     Link Input invalid Test Five 
+	// 						.....     Link Input invalid Test Five 
 	@Test
 	public void LinkInputInvalidTestFive() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -831,17 +727,7 @@ public class ZaskArticlePage {
 		assertFalse(driver.getPageSource().contains("Enter a valid Link"));
 		driver.navigate().refresh();
 	}
-	// 							.....    Author Input Tag Test
-	//	@Test
-	//	public void AuthorInputInvalidTest() throws InterruptedException {
-	//		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-	//		this.sendValue("input[placeholder='Add Authors.']","ab");
-	//		Thread.sleep(1000);
-	//		List<WebElement> result = driver.findElements(By.tagName("zask-ui-search-result"));
-	//		Thread.sleep(5000);
-	//		assertTrue(result.contains("ab"));
-	//	}
-	//						.....     Authors Label Test     .....
+	//							.....     Authors Label Test     .....
 	@Test
 	public void AuthorsLabelTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -851,19 +737,39 @@ public class ZaskArticlePage {
 		this.sendValue("#repoLink", "https://www.javatpoint.com/selenium-css-selector-inner-text");
 		String expect = "Authors";
 		assertEquals(expect,this.selector(".add-owners>div:first-of-type").getText());
-		Thread.sleep(400);
 	}
 	// 					.....    Author Input suggestion count Test 
 	@Test
 	public void AuthorInputSugCountTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		this.sendValue("input[placeholder='Add Authors.']", "ab");
+		this.sendValue("input[placeholder='Add Authors.']", "hari");
 		Thread.sleep(1000);
 		List<WebElement> result = driver.findElements(By.tagName("zask-ui-search-result"));
 		int expected  = 10;
 		Thread.sleep(1000);
 		assertEquals(expected,result.size());
 	}
+//	 							.....    Author Input Tag maximum Test
+	@Test
+	public void AuthorInputMaxTest() throws InterruptedException {
+		this.selector("input[placeholder='Add Authors.']").clear();
+		this.AuthorInput("input[placeholder='Add Authors.']", "hariharan29220", "esakkivash", "vishnuvichu9487", "esakkivash.n", "esakkivash.n+testt10");
+		assertTrue(driver.getPageSource().contains ("hariharan29220"));
+		assertTrue(driver.getPageSource().contains ("esakkivash"));
+		assertTrue(driver.getPageSource().contains ("vishnuvichu9487"));
+		assertTrue(driver.getPageSource().contains ("esakkivash.n"));
+		assertTrue(driver.getPageSource().contains ("esakkivash.n+testt10"));
+	}
+			//		.....    Author tag Input count Test 
+	@Test
+	public void AuthorTagInputCount() throws InterruptedException {
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		Thread.sleep(1000);
+		List<WebElement> result = driver.findElements(By.tagName("#outlet-zask-content-container > zask-content-container > div.zask-content-main.enlarged > zask-add-solution > div > div.add-owners > zask-ui-tags-multi-selector > div > zask-ui-user-closable"));
+		int expected  = 4;
+		Thread.sleep(1000);
+		assertEquals(expected,result.size());
+	}	
 	//						.....    Author Input Tag Test
 	@Test
 	public void AuthorInputValidTest() throws InterruptedException {
@@ -872,7 +778,6 @@ public class ZaskArticlePage {
 		Thread.sleep(1000);
 		this.selector("input[placeholder='Add Authors.']").sendKeys(Keys.ENTER);
 		assertTrue(this.selector("zask-ui-user-closable[username='hariharan29220']").isDisplayed());	
-		Thread.sleep(1000);
 	}
 	//							.....     Authors Label Test     .....
 	@Test
@@ -886,21 +791,9 @@ public class ZaskArticlePage {
 	public void SubmitAlertBoxTitleTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		this.selector("#add-question-submit").click();
-		String expected = "Confirmation";
-		String actual = this.selector("body > lyte-wormhole > lyte-yield > div > div > lyte-yield > lyte-modal-header").getText();
-		Thread.sleep(1000);
-		assertEquals(expected,actual);	
-	}
-	//							.....    Confirmation Box Text Test     .....
-	@Test
-	public void SubmitAlertBoxTextTest() throws InterruptedException {
-		String expected = "Your post will be sent for review.\nDo you want to proceed?";
-		String actual = this.selector("#modal-desc").getText();
-		System.out.println("submit"+this.selector("//div[@id='modal-desc']").getText());
-		assertEquals(expected,actual);	
+		assertTrue(driver.getPageSource().contains("Confirmation"));
 	}
 	////						.....    Confirmation Box Cancel button color Test     .....
-
 	@Test
 	public void SubmitAlertBoxButtoncancelColorTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -923,12 +816,10 @@ public class ZaskArticlePage {
 	public void AfterSubmitcancelTitleTextTest() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		this.selector("#add-question-submit");
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		this.makeClick(".cancel");
-		Thread.sleep(1000);
 		String expect = "Add a title and provide in depth details about your article.";
 		String actual = this.selector("#add-question-title").getText();
-		System.out.println(this.selector("#add-question-title").getText());
 		assertEquals(expect,actual);
 	}
 	//					.....    After submit cancel Description Text Test     .....
@@ -942,9 +833,7 @@ public class ZaskArticlePage {
 	//						.....    After submit cancel  Tag Test     .....
 	@Test
 	public void AfterSubmitCancelTagTest() throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		assertTrue(this.selector("zask-ui-tag-closable[tagname='testing']").isDisplayed());
-		System.out.println(this.selector("Tag"+"zask-ui-tag-closable[tagname='testing']").isDisplayed());
 	} 	
 	//					....     After Submit Ok alert Test     .....
 	@Test
@@ -969,22 +858,23 @@ public class ZaskArticlePage {
 	public void AfterSubmitOkTitleTest() {
 		assertTrue(driver.getPageSource().contains("Add a title and provide in depth details about your article."));
 	}
-	//	....     After Submit Ok Tag Test     .....
+	//						....     After Submit Ok Tag Test     .....
 	@Test
-	public void AfterSubmitOkTagTest() {
+	public void AfterSubmitOkTagTextTest() {
 		String expect = "testing";
 		WebElement tag = this.selector("link-to > a > span[tagname='testing']"); 
 		String actual = tag.getText();
 		assertEquals(expect,actual);
 	}
-	//	....     After Submit Ok Tag Test     .....
+	//						....     After Submit Ok Tag Test     .....
 	@Test
-	public void AfterSubmitOkTagTextTest() {
-		WebElement tag = this.selector("link-to > a > span[tagname='testing']"); 
+	public void AfterSubmitOkTagColorTest() throws InterruptedException {
+		WebElement tag = this.selector("link-to > a");
+		String expect = "rgba(0, 162, 255, 1)";
 		Actions actions = new Actions(driver);
 		actions.moveToElement(tag).perform();
-		String expect = "rgba(0, 162, 255, 1)";
-		assertEquals(expect,tag.getCssValue("background-color"));
+		String actual = tag.getCssValue("background-color");
+		assertEquals(expect,actual);
 	}
 	//							....     After Submit Ok Description Test     .....
 	@Test
@@ -995,20 +885,35 @@ public class ZaskArticlePage {
 	@Test
 	public void AfterSubmitOkLinkTest() {
 		assertTrue(driver.getPageSource().contains("https://www.javatpoint.com/selenium-css-selector-inner-text"));
-
 	}
 	//					....     After Submit Ok Author Test     .....
 	@Test
 	public void AfterSubmitOkAuthorTest() {
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/div[2]");
 		WebElement actual = this.selector("//*[@id='vote-"+ id +"']/zask-ui-solution-authors-chip/div/div[3]");
-		System.out.println("//div[@id="+ id +"]/zask-ui-solution-authors-chip/div/div[2]");
 		Actions actions = new Actions(driver);
 		actions.moveToElement(actual).perform();
 		assertTrue(this.selector("#co-author-pic").isDisplayed());
 		assertTrue(this.selector("//span[text()= 'hariharan29220']").isDisplayed());
 	}
+//					.....    After submit link test    .....	
+	@Test
+	public void AfterSubmitLinkTest() {
+		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/question-detail-container");
+		String expect = "https://www.javatpoint.com/selenium-css-selector-inner-text";
+		String actual = this.selector("//*[@id="+ id +"]/div[2]/div[2]/div[2]/div/span/a").getAttribute("href");
+		assertEquals(expect,actual);
+		System.out.println(this.selector("a[target='_blank']").getAttribute("href"));
+	}	
+//					.....    After submit link test    .....	
+	@Test
+	public void AfterSubmitLinkTestTwo() {
+		String id  = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-solution-detail/zask-ui-card/zask-ui-solution-detail-view/question-detail-container");
+		String expect = "https://www.javatpoint.com/selenium-css-selector-inner-text";
+		this.selector("//*[@id="+ id +"]/div[2]/div[2]/div[2]/div/span/a").click();
+		this.selector("a[target='_blank']").click();
+		assertEquals(expect,driver.getCurrentUrl());
+}
 	
 	@AfterClass
 	public static void Quit() throws InterruptedException {
