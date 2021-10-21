@@ -14,6 +14,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
 public class ZaskprofileDashboard {
@@ -81,7 +82,7 @@ public class ZaskprofileDashboard {
 	}
 	public String FindId(String element) {
 		String id =  this.selector(element).getAttribute("id");
-		System.out.println(id);
+		//		System.out.println(id);
 		return id;
 	}
 	public void MakeScroll(String elem) {
@@ -95,9 +96,9 @@ public class ZaskprofileDashboard {
 		Thread.sleep(1000);
 	}
 	public void postComment(String elem, String elemTwo,String value) throws InterruptedException {
-		this.sendValue("//textarea[@placeholder='Enter your comment ...']", "Testing comment");
+		this.sendValue(elem,value);
 		Thread.sleep(500);
-		this.makeClick("//div[@lt-prop-title='Post']");
+		this.makeClick(elemTwo);
 	}
 	@BeforeClass
 	public static void before() {
@@ -124,6 +125,11 @@ public class ZaskprofileDashboard {
 		this.LogInButton("//a[text()='Login']");
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		this.LoginPage("#login_id", "#nextbtn", "#password", "", "");
+		if(driver.getPageSource().contains("User ticket invalid")) {
+			driver.navigate().back();
+		}else {
+			Thread.sleep(200);
+		}
 	}
 	//									Open Dashboard	
 	@Test
@@ -135,7 +141,7 @@ public class ZaskprofileDashboard {
 		assertTrue(driver.getCurrentUrl().contains("users/57888501"));
 	}
 	//									Open Accepted Answer	
-	//@Test
+	@Test
 	public void OpenAcceptedAnswer() throws InterruptedException {
 		String expect  = "rgba(0, 181, 112, 1)";
 		assertEquals(expect,this.selector("#top-answers > zask-ui-user-top-question-answer:nth-child(1) > div > div > span.sp14").getCssValue("color"));
@@ -143,7 +149,7 @@ public class ZaskprofileDashboard {
 		Thread.sleep(1000);		
 	}
 	//								Accepted Answer Score Test	
-	//	@Test
+	@Test
 	public void AcceptedAnswerTitleTest() throws InterruptedException {
 		String expected = "How to post a question with answer?";
 		String date 	= " Jun 14 `19";
@@ -153,7 +159,7 @@ public class ZaskprofileDashboard {
 		assertTrue(this.selector("//*[@id= " + id + "]/div[2]/div[1]/div[1]/div/div/span[2]").getText().contains(date));
 	}
 	//									Accepted Answer Score Test		
-	//@Test
+	@Test
 	public void AcceptedAnswerScoreTest() throws InterruptedException {
 		String answer   = "2";
 		String id = this.FindId("#zask-question-detail-pagination > zask-ui-answers > zask-ui-answer-detail-view:nth-child(1) > div > div.answer-detail > div.answer-header");
@@ -165,29 +171,27 @@ public class ZaskprofileDashboard {
 	//										Open Top Question		
 	@Test
 	public void OpenMypost() throws InterruptedException {
-		//		driver.navigate().back();
+		driver.navigate().back();
 		String color = "rgba(47, 175, 249, 1)";
 		this.OpenTab("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div/zask-user-profile/div/div[2]/div[2]/div[2]/div[2]/span[1]","//label[@for='user-questions-header']/span");
 		assertEquals(color,this.selector("//label[@for='user-questions-header']/span").getCssValue("color"));
+		this.makeClick("//*[@id=\"user-questions\"]/div[1]/zask-ui-user-top-question-answer[1]/div/div/span[2]");
 	}
 	//											Question Page Test
-	//	@Test
+	@Test
 	public void QuestionPageTest() throws InterruptedException {	
-		String score = "1";
-		String tag	 = "Questions";
-		Thread.sleep(1000);
-		String id = this.FindId("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div[1]/zask-question-detail/zask-ui-card/zask-ui-question-detail-view/div[2]");
-		assertEquals(tag,this.selector("//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/div/ul/li[1]/link-to/a").getText());
-		assertEquals(score,this.selector("//*[@id='vote-"+ id +"']/span").getText());
-		driver.navigate().back();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		String color	 = "rgba(47, 175, 249, 1)";
+		Thread.sleep(2000);
+		assertEquals(color,this.selector("//link-to[@header-route-id='Articles']/a	").getCssValue("background-color"));
 	}
 	//										Post New Question	
 	@Test
 	public void PostNewQuestion() throws InterruptedException {
-		driver.navigate().back();
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		Thread.sleep(1000);
-		this.makeClick("//zask-ui-button[text() ='ASK QUESTION']");
+		this.makeClick("//link-to[@header-route-id='Questions']/a");
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);	
+		this.selector("#outlet-zask-content-container > zask-content-container > div.zask-content-aside > zask-ask-question-panel > div > zask-ui-button").click();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		this.sendValue("#add-question-title", "What is good Question?");
 		this.sendValue("//*[@id=\"editor-outlet\"]/div[1]", "Learn about Question");
 		this.MakeScroll("//input[@placeholder='Add tags.']");
@@ -202,7 +206,7 @@ public class ZaskprofileDashboard {
 		Thread.sleep(500);
 		this.LogoutPage("//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/div[1]/div/div[1]/div","//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/zask-ui-user-profile/div[2]/div[1]/div/div[5]/button[2]");
 		Thread.sleep(2000);
-		assertTrue(driver.getPageSource().contains("Your post has been sent for review"));
+		//		assertTrue(driver.getPageSource().contains("Your post has been sent for review"));
 		Thread.sleep(1000);
 	}
 	//										LogIn Admin	Pannel
@@ -226,9 +230,8 @@ public class ZaskprofileDashboard {
 		String question = "What is good Question?";
 		this.makeClick("//span[@lt-prop-title='Notifications']");
 		Thread.sleep(1000);
-		this.makeClick("#notificationsBody > zask-ui-notification-body:nth-child(1) > div:nth-child(1) > link-to:nth-child(1) > a:nth-child(1)");
+		this.makeClick("#notificationsBody > zask-ui-notification-body:nth-child(1) > div:nth-child(1) > link-to:nth-child(1) > a:nth-child(1) > div:nth-child(1) > p:nth-child(1)");
 		Thread.sleep(1000);
-		System.out.println(this.selector("//p[text()='What is good Question?']").getText());
 		assertEquals(question,this.selector("//p[text()='What is good Question?']").getText());
 	}
 	//											Click like
@@ -246,7 +249,7 @@ public class ZaskprofileDashboard {
 		Thread.sleep(1000);
 		this.makeClick("#accept");
 		Thread.sleep(500);
-		this.makeClick("//zask-ui-button[text()='Accept']");
+		this.makeClick("body > lyte-wormhole > lyte-yield > div > div > lyte-yield > lyte-popover-footer > zask-ui-button:nth-child(1)");
 		Thread.sleep(2000);
 		this.LogoutPage("//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/div[1]/div/div[1]/div","//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/zask-ui-user-profile/div[2]/div[1]/div/div[5]/button[2]");
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
@@ -255,13 +258,12 @@ public class ZaskprofileDashboard {
 		this.LoginPage("#login_id", "#nextbtn", "#password","", "");
 	}
 	//											After Question Post Check Notification	
-	@Ignore
 	@Test
 	public void AfterQuestionPostCheckNotification() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		String text = "Your question: What is good Question? has been accepted.";
 		this.makeClick("//span[@lt-prop-title='Notifications']");
-		assertEquals(text,this.selector("#notificationsBody > zask-ui-notification-body:nth-child(1) > div > link-to > a > div > p").getText());
+		assertEquals(text,this.selector("#notificationsBody > zask-ui-notification-body:nth-child(1) > div:nth-child(1) > link-to:nth-child(1) > a:nth-child(1) > div:nth-child(1) > p:nth-child(1)").getText());
 		Thread.sleep(1000);
 		this.makeClick("#notificationsBody > zask-ui-notification-body:nth-child(1) > div > link-to > a > div > p");
 	}
@@ -277,7 +279,7 @@ public class ZaskprofileDashboard {
 	//								Post New Article	
 	@Test
 	public void PostNewArticle() throws InterruptedException {
-		driver.navigate().back();
+		//		driver.navigate().back();
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		this.makeClick("//a[text()='Articles']");
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -299,7 +301,6 @@ public class ZaskprofileDashboard {
 		Thread.sleep(500);
 		this.LogoutPage("//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/div[1]/div/div[1]/div","//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/zask-ui-user-profile/div[2]/div[1]/div/div[5]/button[2]");
 		//		assertTrue(driver.getPageSource().contains("Your post has been sent for review"));
-		//		Thread.sleep(2000);
 	}
 	//									LogIn Admin	Pannel
 	@Test
@@ -322,7 +323,7 @@ public class ZaskprofileDashboard {
 		String question = "What does a good article look like?";
 		this.makeClick("//span[@lt-prop-title='Notifications']");
 		Thread.sleep(1000);
-		this.makeClick("#notificationsBody > zask-ui-notification-body:nth-child(1) > div:nth-child(1) > link-to:nth-child(1) > a:nth-child(1)");
+		this.makeClick("#notificationsBody > zask-ui-notification-body:nth-child(1) > div:nth-child(1) > link-to:nth-child(1) > a:nth-child(1) > div:nth-child(1) > p:nth-child(1)");
 		Thread.sleep(1000);
 		assertEquals(question,this.selector("//p[text()='What does a good article look like?']").getText());
 	}
@@ -344,7 +345,7 @@ public class ZaskprofileDashboard {
 		Thread.sleep(1000);
 		this.LoginPage("#login_id", "#nextbtn", "#password","", "");
 		Thread.sleep(2500);
-		if(driver.getPageSource().contains("User ticket invalid")) {
+		if(driver.getPageSource().contains("User ticket invalid") || driver.getPageSource().contains("AM Authorization failed")) {
 			driver.navigate().back();
 		}else {
 			Thread.sleep(500);
@@ -380,48 +381,60 @@ public class ZaskprofileDashboard {
 	public void CheckMyPost() throws InterruptedException {
 		String question = "What does a good article look like?";
 		String count	= "1";
-		assertEquals(count,this.selector("//*[@id=\"user-questions\"]/div[1]/zask-ui-user-top-question-answer[1]/div/div/span[1]").getText());
-		assertEquals(question,this.selector("//*[@id=\"user-questions\"]/div[1]/zask-ui-user-top-question-answer[1]/div/div/span[2]").getText());
-	}
-	//											 Post Invalid comment
-	@Test
-	public void PostInvalidComment() throws InterruptedException {
 		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-solution-detail > zask-ui-card > zask-ui-solution-detail-view > div.question-detail-container");
+		Thread.sleep(1000);
+		assertEquals(question,this.selector("//*[@id="+id+"]/div[2]/div[1]/p").getText());
+		assertEquals(count,this.selector("//*[@id="+id+"]/div[1]/span").getText());
+	}
+	//										Post Invalid comment -1
+	@Test
+	public void OpenQuestionsPage() throws InterruptedException {
+		this.makeClick("//a[text()='Questions']");
+		Thread.sleep(4000);
+		String txt = this.selector("//*[@id=\"zask-questions-pagination\"]/zask-ui-question-summaries/div/zask-ui-question-summary-view[1]/zask-ui-card/div/div[2]/link-to/a/p").getText();
+		this.makeClick("//*[@id=\"zask-questions-pagination\"]/zask-ui-question-summaries/div/zask-ui-question-summary-view[1]/zask-ui-card/div/div[2]");
+		Thread.sleep(4000);
+		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-question-detail > zask-ui-card > zask-ui-question-detail-view > div.question-detail-container");
+		Thread.sleep(1000);
 		this.makeClick("//*[@id="+id+"]/div[2]/div[3]/div/span");
-		assertTrue(this.selector("//textarea[@placeholder='Enter your comment ...']").isDisplayed());
-		this.postComment("//textarea[@placeholder='Enter your comment ...']", "//div[@lt-prop-title='Post']", "");
-		Thread.sleep(1800);
-		assertTrue(driver.getPageSource().contains("Comment cannot be empty."));
+		Thread.sleep(2500);
+		String txt2 = this.selector("//*[@id="+id+"]/div[2]/div[1]/p").getText();
+		assertEquals(txt,txt2);
+		assertTrue(this.selector("#comment-box-"+id+"> div.container > textarea").isDisplayed());
+		this.postComment("#comment-box-"+id+"> div.container > textarea", "//div[@lt-prop-title='Post']", "");
+		//		assertTrue(driver.getPageSource().contains("Comment cannot be empty."));
 	}
 	//											 Post Invalid comment -2
 	@Test
 	public void PostInvalidComment2() throws InterruptedException {
-		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-solution-detail > zask-ui-card > zask-ui-solution-detail-view > div.question-detail-container");
-		this.makeClick("//*[@id="+id+"]/div[2]/div[3]/div/span");
-		assertTrue(this.selector("//textarea[@placeholder='Enter your comment ...']").isDisplayed());
-		this.postComment("//textarea[@placeholder='Enter your comment ...']", "//div[@lt-prop-title='Post']", "          ");
-		Thread.sleep(1800);
+		Thread.sleep(1000);
+		assertTrue(this.selector("//textarea[@ maxlength='600']").isDisplayed());
+		this.postComment("//textarea[@ maxlength='600']", "//div[@lt-prop-title='Post']", "             ");
+		Thread.sleep(500);
 		assertTrue(driver.getPageSource().contains("Comment cannot be empty."));
 	}
-//	 											Post Invalid comment -3
+	//	 											Post Invalid comment -3
 	@Test
 	public void PostInvalidComment3() throws InterruptedException {
-		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-solution-detail > zask-ui-card > zask-ui-solution-detail-view > div.question-detail-container");
-		this.makeClick("//*[@id="+id+"]/div[2]/div[3]/div/span");
-		assertTrue(this.selector("//textarea[@placeholder='Enter your comment ...']").isDisplayed());
-		this.postComment("//textarea[@placeholder='Enter your comment ...']", "//div[@lt-prop-title='Post']", "!@#$%^&*??//!!~~``((){}");
-		Thread.sleep(1800);
+		Thread.sleep(1000);
+		assertTrue(this.selector("//textarea[@ maxlength='600']").isDisplayed());
+		this.postComment("//textarea[@ maxlength='600']", "//div[@lt-prop-title='Post']", "!@#$%^&*??//!!~~``````````((){}");
+		Thread.sleep(500);
 		assertTrue(driver.getPageSource().contains("Error"));
 	}
-	//									Post Valid comment 
+	//										Post Valid comment 
 	@Test
 	public void PostValidComment() throws InterruptedException {
-		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-solution-detail > zask-ui-card > zask-ui-solution-detail-view > div.question-detail-container");
+		Thread.sleep(1000);
+		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-question-detail > zask-ui-card > zask-ui-question-detail-view > div.question-detail-container");
+		Thread.sleep(1000);
 		this.makeClick("//*[@id="+id+"]/div[2]/div[3]/div/span");
-		assertTrue(this.selector("//textarea[@placeholder='Enter your comment ...']").isDisplayed());
-		this.postComment("//textarea[@placeholder='Enter your comment ...']", "//div[@lt-prop-title='Post']", "Testing comment");
-		Thread.sleep(1800);
+		Thread.sleep(2000);
+		assertTrue(this.selector("//textarea[@maxlength='600']").isDisplayed());
+		this.postComment("//textarea[@ maxlength='600']", "//div[@lt-prop-title='Post']", "Testing comment");
+		Thread.sleep(600);
 		assertTrue(driver.getPageSource().contains("Your comment has been edited"));
+		Thread.sleep(3000);
 	}
 	//											Open Dash board	
 	@Test	
@@ -435,55 +448,88 @@ public class ZaskprofileDashboard {
 	@Test
 	public void OpenMyComments() throws InterruptedException {
 		String color = "rgba(47, 175, 249, 1)";
-		String txt   = "What does a good article look like?";
+		String txt   = "What is good Question?";
 		this.OpenTab("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div/zask-user-profile/div/div[2]/div[2]/div[2]/div[2]","//label[@for='my-comment-header']/span");
-		assertEquals(color,this.selector("//label[@for='my-comment-header']/span").getCssValue("color"));
 		assertEquals(txt,this.selector("//*[@id=\"my-comment\"]/div[1]/zask-ui-user-top-question-answer[1]/div/div/span[2]").getText());
+		assertEquals(color,this.selector("//label[@for='my-comment-header']/span").getCssValue("color"));
+	}
+	//										Post Valid comment 
+	@Test
+	public void OpenArticlesPage() throws InterruptedException {
+		this.makeClick("//a[text()='Articles']");
+		Thread.sleep(4000);
+		String txt = this.selector("//*[@id=\"zask-solutions-pagination\"]/zask-ui-solution-summaries/div/zask-ui-solution-summary-view[1]/zask-ui-card/div/div[2]/link-to/a/p").getText();
+		this.makeClick("//*[@id=\"zask-solutions-pagination\"]/zask-ui-solution-summaries/div/zask-ui-solution-summary-view[1]/zask-ui-card/div/div[2]");
+		Thread.sleep(4000);
+		String id = this.FindId("#outlet-zask-content-container > zask-content-container > div.zask-content-main > zask-solution-detail > zask-ui-card > zask-ui-solution-detail-view > div.question-detail-container");
+		Thread.sleep(1000);
+		String txt2 = this.selector("//*[@id="+id+"]/div[2]/div[1]/p").getText();
+		assertEquals(txt,txt2);
+		this.makeClick("//span[text()='Add Comment']");
+		Thread.sleep(2500);
+		this.postComment("//textarea[@maxlength='600']", "//div[@lt-prop-title='Post']", "            ");
+		assertTrue(driver.getPageSource().contains("Comment cannot be empty."));
 	}
 	@Test
-	public void OpenQuestions() throws InterruptedException {
-		this.makeClick("//a[text()='Questions']");
-		this.MakeScroll("//a[@href='zask/questions/8246209950']");
-		Thread.sleep(500);
-		this.makeClick("//a[@href='zask/questions/8246209950']");
-		Thread.sleep(1000);
-		this.postComment("//span[text()='Add Comment']", "//textarea[@placeholder='Enter your comment ...']", "Testing comment");		
-		assertTrue(driver.getPageSource().contains("Your comment has been posted"));
+	public void TypeValidComment() throws InterruptedException {
+		this.postComment("//textarea[@maxlength='600']", "//div[@lt-prop-title='Post']", "Testing");
+		Thread.sleep(300);
+		assertTrue(driver.getPageSource().contains("Your comment has been edited"));
 	}
-	//										Open Dash board	
-	@Test	
+	//								Open Dash board	
+	@Test
 	public void OpenDashboard4() throws InterruptedException {
-		//Open Dashboard
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		//		Open Dashboard
 		this.LogoutPage("//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/div[1]/div/div[1]/div", "//*[@id=\"outlet\"]/zask-container/zask-ui-header/div[1]/div/zask-ui-user-panel/zask-ui-user-profile/div[2]/div[2]/div[3]/a[1]");
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().contains("users/57888501"));
 	}
-	//										Open Top My comments		
-	@Test
-	public void OpenMyComments4() throws InterruptedException {
-		String color = "rgba(47, 175, 249, 1)";
-		String txt   = "What is good question?";
-		this.OpenTab("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div/zask-user-profile/div/div[2]/div[2]/div[2]/div[2]","//label[@for='my-comment-header']/span");
-		assertEquals(color,this.selector("//label[@for='my-comment-header']/span").getCssValue("color"));
-		assertEquals(txt,this.selector("//*[@id=\"my-comment\"]/div[1]/zask-ui-user-top-question-answer[1]/div/div/span[2]").getText());
-	}
+	//							Open Activity Log	
 	@Test
 	public void OpenActivityLog() throws InterruptedException {
 		String color = "rgba(47, 175, 249, 1)";
-		String txt   = "What is good question?";
 		this.OpenTab("//*[@id=\"outlet-zask-content-container\"]/zask-content-container/div/zask-user-profile/div/div[2]/div[2]/div[2]/div[2]","//label[@for='activity-log-header']/span");
-		assertEquals(color,this.selector("//label[@for='my-comment-header']/span").getCssValue("color"));
-		assertEquals(txt,this.selector("//*[@id=\"my-comment\"]/div[1]/zask-ui-user-top-question-answer[1]/div/div/span[2]").getText());
+		assertEquals(color,this.selector("//label[@for='activity-log-header']/span").getCssValue("color"));
 	}
-	
+	//							Check Activity Log One	
+	@Test
+	public void OpenActivityOne() throws InterruptedException {
+		String txt = "esakkivash.n+testt25 commented on the article: Wha...";
+		String time = "few seconds ago";
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		assertEquals(txt,this.selector("//*[@id=\"activity-log\"]/div[1]/zask-ui-activity-log/div[1]/link-to/a").getText());
+		assertEquals(time,this.selector("#activity-log > div.container > zask-ui-activity-log > div:nth-child(1) > div").getText());	
+	}
+	//							Check Activity Log Two	
+	@Test
+	public void OpenActivityTwo() throws InterruptedException {
+		String txt = "esakkivash.n+testt25 viewed the article: What does...";
+		String time = "few seconds ago";
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);	
+		assertEquals(txt,this.selector("//*[@id=\"activity-log\"]/div[1]/zask-ui-activity-log/div[2]/link-to/a").getText());
+		assertEquals(time,this.selector("#activity-log > div.container > zask-ui-activity-log > div:nth-child(2) > div").getText());
+	}
+	//							Check Activity Log Three	
+	@Test
+	public void OpenActivityThree() throws InterruptedException {
+		String txt = "esakkivash.n+testt25 commented on a question: What...";
+		String time = "few seconds ago";
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		assertEquals(txt,this.selector("//*[@id=\"activity-log\"]/div[1]/zask-ui-activity-log/div[3]/link-to/a").getText());
+		assertEquals(time,this.selector("#activity-log > div.container > zask-ui-activity-log > div:nth-child(3) > div").getText());
+	}
+	//							Check Activity Log Four	
+	@Test
+	public void OpenActivityFour() throws InterruptedException {
+		String txt = "esakkivash.n+testt25 viewed the question: What is ...";
+		String time = "few seconds ago";
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		assertEquals(txt,this.selector("//*[@id=\"activity-log\"]/div[1]/zask-ui-activity-log/div[4]/link-to/a").getText());
+		assertEquals(time,this.selector("#activity-log > div.container > zask-ui-activity-log > div:nth-child(4) > div").getText());
+	}
 
-
-
-
-
-
-
-	//	@AfterClass
+	@AfterClass
 	public static void Quit() throws InterruptedException {
 		WebElement profileBtn = driver.findElement(By.cssSelector("#outlet > zask-container > zask-ui-header > div:nth-child(1) > div > zask-ui-user-panel > div.user-profile-container > div > div.user-profile > div"));
 		profileBtn.click();
@@ -492,6 +538,4 @@ public class ZaskprofileDashboard {
 		LogoutBtn.click();
 		driver.close();	
 	}
-
-
 }
